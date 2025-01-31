@@ -6,19 +6,19 @@ export default {
 	userName: "",
 	userPassword: "",
 	confirmUserPassword: "",
-
-	setField(props){
-		/*this method is intended to set the different fields such as firstName, lastName etc. through the use of a function instead of setting it raw. It will require that the presenter has a "field" and "field.value" naming convention. Otherwise the names of the variables below will need to be changed to match what is in the presenter
-		i.e in the presenter the data saved from view is like:
-		form={
-			firstName: "",
-			lastName: "",
-
-			:
-			
-			confirmUserPassword: "",
-		}
-		*/
-		this[props.field] = props.field.value;
+  
+	setField(props) {
+	  this[props.field] = props.value;
+	  console.log(`Set ${props.field} to ${props.value}`); // For debugging
 	},
-}
+  
+	createUser(onSuccess, onError) {
+	  // Simulate success if all required fields are filled
+	  if (this.firstName && this.userName && this.email) {
+		onSuccess({ username: this.userName });
+	  } else {
+		onError("Missing required fields: firstName, userName, or email.");
+	  }
+	},
+  };
+  
