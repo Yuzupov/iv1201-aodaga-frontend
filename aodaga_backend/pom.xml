@@ -8,11 +8,22 @@
   <name>aodaga_backend</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.sparkjava/spark-core -->
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>2.9.4</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.2</version>
     </dependency>
   </dependencies>
 </project>
