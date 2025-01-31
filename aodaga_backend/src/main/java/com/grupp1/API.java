@@ -63,6 +63,7 @@ public class API {
 
 
 
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     return "ble";
   }
 
