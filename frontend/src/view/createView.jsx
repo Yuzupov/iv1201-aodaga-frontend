@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import CreatePresenter from "../presenter/createPresenter"; // Import the presenter
+import CreatePresenter from "../presenter/createPresenter";
 
 const CreateView = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    personNumber: "",
-    username: "",
-    password: "",
+    personalNumber: "", 
+    userName: "", 
+    userPassword: "", 
   });
 
-  const [message, setMessage] = useState(""); // For displaying success/error messages
+  const [message, setMessage] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,11 +24,11 @@ const CreateView = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Pass formData to the presenter for processing
+    
     CreatePresenter.submitForm(
       formData,
-      (data) => setMessage(`Account created successfully: ${data.username}`), // Success callback
-      (error) => setMessage(`Error: ${error}`) // Error callback
+      (data) => setMessage(`Account created successfully: ${data.userName}`), 
+      (error) => setMessage(`Error: ${error}`) 
     );
   };
 
@@ -42,9 +42,9 @@ const CreateView = () => {
           { label: "First Name", name: "firstName", type: "text" },
           { label: "Last Name", name: "lastName", type: "text" },
           { label: "Email", name: "email", type: "email" },
-          { label: "Person Number", name: "personNumber", type: "text" },
-          { label: "Username", name: "username", type: "text" },
-          { label: "Password", name: "password", type: "password" },
+          { label: "Personal Number", name: "personalNumber", type: "text" },
+          { label: "Username", name: "userName", type: "text" },
+          { label: "Password", name: "userPassword", type: "password" },
         ].map((field) => (
           <div key={field.name} className="flex flex-col">
             <label htmlFor={field.name} className="text-lg font-medium">

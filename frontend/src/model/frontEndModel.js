@@ -22,32 +22,39 @@ export default {
 		*/
 		this[props.field] = props.field.value;
 	},
-	async registerUser() {
-		try {
-		  const response = await fetch("http://localhost:4567/register", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-			  firstName: this.firstName,
-			  lastName: this.lastName,
-			  email: this.email,
-			  personalNumber: this.personalNumber,
-			  userName: this.userName,
-			  userPassword: this.userPassword,
-			  confirmUserPassword: this.confirmUserPassword,
-			}),
-		  });
-	
-		  if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		  }
-	
-		  const data = await response.json();
-		  console.log(`Returned: ${data}`);
-		  return data;
-		} catch (error) {
-		  console.error(`Error when registering: ${error}`);
-		  throw error;
-		}
-	  },
-	};
+	/*async registerUser() {
+    try {
+      const response = await fetch("http://localhost:4567/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          personalNumber: this.personalNumber,
+          userName: this.userName,
+          userPassword: this.userPassword,
+          confirmUserPassword: this.confirmUserPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`Returned: ${data}`);
+      return data;
+    } catch (error) {
+      console.error(`Error when registering: ${error}`);
+      throw error;
+    }
+  },
+  */
+  async registerUser() {
+	const mockResponse = { username: this.userName, message: "Mock account created!" };
+	console.log("Mock response:", mockResponse);
+	return mockResponse;
+  }
+  
+};
