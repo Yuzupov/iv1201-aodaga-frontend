@@ -20,23 +20,28 @@ export default {
 			confirmUserPassword: "",
 		}
 		*/
-		this[props.field] = props.field.value;
-	},
-	registerUser = async () => {
+		console.log("in model" + props);
+		for(var data in props){
+			this.field[data] = props[data];
+			console.log(props[data]);
+		}
+		console.log("after loop: " + props);	},
+	/*
+	async registerUser(props) {
 		try{
 			const response = await fetch(
-				'localhost:4567/register',
+				'http://localhost:4567/register',
 				{
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: { 'Content-Type': 'text/plain' },
 					body: JSON.stringify({
-						firstName: this.firstName, 
-						lastName: this.lastName, 
-						email: this.email, 
-						personalNumber: this.personalNumber 
-						userName: this.userName, 
-						userPassword: this.userPassword, 
-						confirmUserPassword: this.confirmUserPassword, 
+						firstName: this.field.firstName, 
+						lastName: this.field.lastName, 
+						email: this.field.email, 
+						personalNumber: this.field.personalNumber,
+						userName: this.field.userName, 
+						userPassword: this.field.userPassword, 
+						confirmUserPassword: this.field.confirmUserPassword, 
 
 					}),
 				}
@@ -44,7 +49,7 @@ export default {
 			if(!response.ok){
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			const data = await response.json();
+			const data = await response;
 			console.log(`Returned: ${data}`);
 			return data;
 		} catch (error) {
@@ -52,4 +57,11 @@ export default {
 			throw error;
 		}
 	},
-}
+*/
+  async registerUser() {
+	const mockResponse = { username: this.userName, message: "Mock account created!" };
+	console.log("Mock response:", mockResponse);
+	return mockResponse;
+  }
+  
+};
