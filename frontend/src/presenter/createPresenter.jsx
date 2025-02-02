@@ -3,9 +3,7 @@ import frontEndModel from "../model/frontEndModel";
 const CreatePresenter = {
   submitForm: async (formData, onSuccess, onError) => {
     try {
-      for (const [field, value] of Object.entries(formData)) {
-        frontEndModel.setField({ field, value });
-      }
+      	frontEndModel.setField(formData);
       const response = await frontEndModel.registerUser();
       onSuccess(response); 
     } catch (error) {
