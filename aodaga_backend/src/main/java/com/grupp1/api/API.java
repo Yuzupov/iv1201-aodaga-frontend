@@ -1,7 +1,8 @@
-package com.grupp1;
+package com.grupp1.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grupp1.Controller;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +14,10 @@ import spark.Spark;
 import static spark.Spark.before;
 
 public class API {
-  API(){
+  public API(){
     this(4567);
   }
-  API(int port){
+  public API(int port){
     if (port != 4567)
       Spark.port(port);
     setUpEndpoints();
@@ -63,27 +64,16 @@ public class API {
     } catch (JsonProcessingException e) {
       System.out.println("error");
       throw new RuntimeException(e);
-
     }
 
-      for (Map.Entry<String, Object> lol : json.entrySet()) {
-        System.out.println(lol.getKey() + " : " + lol.getValue());
-        System.out.println(lol.getValue().getClass());
+    try {
+      boolean success = Controller.register(json);
+    }catch (BadApiInputException e){
+      res.status(400);
+      return "fail "+e.toString();
+    }
 
-  /*
-  firstName: "",
-    lastName: "",
-    email: "",
-    personalNumber: "",
-    userName: "",
-    userPassword: "",
-    confirmUserPassword: "",
-    confirmationMessage: "",
-   */
-      }
-
-    return "ble";
+    return "woop woop";
   }
-
 
 }
