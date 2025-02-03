@@ -1,4 +1,5 @@
 export default {
+	field: {
 	firstName: "",
 	lastName: "",
 	email: "",
@@ -7,7 +8,7 @@ export default {
 	userPassword: "",
 	confirmUserPassword: "",
 	confirmationMessage: "",
-
+	},
 	setField(props){
 		/*this method is intended to set the different fields such as firstName, lastName etc. through the use of a function instead of setting it raw. It will require that the presenter has a "field" and "field.value" naming convention. Otherwise the names of the variables below will need to be changed to match what is in the presenter
 		i.e in the presenter the data saved from view is like:
@@ -22,11 +23,11 @@ export default {
 		*/
 		console.log("in model" + props);
 		for(var data in props){
+			console.log("in loop in model: " + this.field[data]);
 			this.field[data] = props[data];
 			console.log(props[data]);
 		}
 		console.log("after loop: " + props);	},
-	/*
 	async registerUser(props) {
 		try{
 			const response = await fetch(
@@ -57,11 +58,12 @@ export default {
 			throw error;
 		}
 	},
-*/
+	/*
   async registerUser() {
 	const mockResponse = { username: this.userName, message: "Mock account created!" };
 	console.log("Mock response:", mockResponse);
 	return mockResponse;
   }
+  */
   
 };
