@@ -19,10 +19,11 @@ public class API {
   }
 
   private void setUpEndpoints(){
-    Spark.get("/hello/:name", this::hello);
+    //Spark.get("/hello/:name", this::hello);
     Spark.post("/register", this::register);
   }
 
+  /*
   String hello(Request request, Response response){
     System.out.println("body: " + request.body());
     System.out.println("attributes: " + request.attributes());
@@ -31,9 +32,9 @@ public class API {
     System.out.println("queryg: " + request.queryParams("g"));
     return "Hello" + request.params(":name");
   }
+   */
 
   String register(Request req, Response res) {
-
     Map<String, Object> json;
     try {
       json = new ObjectMapper().readValue(req.body(), HashMap.class);
@@ -60,9 +61,7 @@ public class API {
    */
       }
 
-
-
-
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     return "ble";
   }
 
