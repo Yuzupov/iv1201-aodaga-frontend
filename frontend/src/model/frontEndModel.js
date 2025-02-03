@@ -3,7 +3,7 @@ export default {
   lastName: "",
   email: "",
   personalNumber: "",
-  userName: "",
+  username: "",
   userPassword: "",
   confirmUserPassword: "",
   confirmationMessage: "",
@@ -35,7 +35,7 @@ export default {
           lastName: this.lastName,
           email: this.email,
           personalNumber: this.personalNumber,
-          userName: this.userName,
+          userName: this.username,
           userPassword: this.userPassword,
           confirmUserPassword: this.confirmUserPassword,
         }),
@@ -61,7 +61,7 @@ export default {
         method: "POST", // Sends data to the server and authenticate the user based on the data
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userName: this.userName,
+          username: this.username,
           userPassword: this.userPassword,
         }),
       });
@@ -108,7 +108,7 @@ export default {
   */
   async registerUser() {
     const mockResponse = {
-      username: this.userName,
+      username: this.username,
       message: "Mock account created!",
     };
     console.log("Mock response:", mockResponse);
@@ -117,11 +117,11 @@ export default {
 
   async loginUser() {
     // Mock response simulating a login action
-	console.log("Attempting login with:", this.userName, this.userPassword);
-    if (this.userName === "testuser" && this.userPassword === "password123") {
+	console.log("Attempting login with:", this.username, this.userPassword);
+    if (this.username === "testuser" && this.userPassword === "password123") {
       const mockResponse = {
         token: "mock-jwt-token-12345",
-        username: this.userName,
+        username: this.username,
         message: "Mock login successful!",
       };
 

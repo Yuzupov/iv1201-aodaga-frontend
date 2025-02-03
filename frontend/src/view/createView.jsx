@@ -7,7 +7,7 @@ const CreateView = () => {
     lastName: "",
     email: "",
     personalNumber: "", 
-    userName: "", 
+    username: "", 
     userPassword: "", 
   });
 
@@ -27,7 +27,7 @@ const CreateView = () => {
     
     CreatePresenter.submitForm(
       formData,
-      (data) => setMessage(`Account created successfully: ${data.userName}`), 
+      (data) => setMessage(`Account created successfully: ${data.username}`), 
       (error) => setMessage(`Error: ${error}`) 
     );
   };
@@ -43,7 +43,7 @@ const CreateView = () => {
           { label: "Last Name", name: "lastName", type: "text" },
           { label: "Email", name: "email", type: "email" },
           { label: "Personal Number", name: "personalNumber", type: "text" },
-          { label: "Username", name: "userName", type: "text" },
+          { label: "Username", name: "username", type: "text" },
           { label: "Password", name: "userPassword", type: "password" },
         ].map((field) => (
           <div key={field.name} className="flex flex-col">

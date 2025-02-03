@@ -3,11 +3,11 @@ import LoginPresenter from "../presenter/loginPresenter";
 
 const LoginView = () => {
   const [formData, setFormData] = useState({
-    userName: "",
+    username: "",
     userPassword: "",
   });
 
-  const [message, setMessage] = useState(""); // For success/error messages
+  const [message, setMessage] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,8 +22,8 @@ const LoginView = () => {
 
     LoginPresenter.submitLogin(
       formData,
-      (data) => setMessage(`Login successful! Welcome, ${data.userName}`), // Success callback
-      (error) => setMessage(`Error: ${error}`) // Error callback
+      (data) => setMessage(`Login successful! Welcome, ${data.userName}`), 
+      (error) => setMessage(`Error: ${error}`) 
     );
   };
 
@@ -34,7 +34,7 @@ const LoginView = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { label: "Username", name: "userName", type: "text" },
+          { label: "Username", name: "username", type: "text" },
           { label: "Password", name: "userPassword", type: "password" },
         ].map((field) => (
           <div key={field.name} className="flex flex-col">
