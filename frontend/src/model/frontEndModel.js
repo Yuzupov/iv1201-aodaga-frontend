@@ -1,13 +1,13 @@
 export default {
 	field: {
-	firstName: "",
-	lastName: "",
-	email: "",
-	personalNumber: "",
-	userName: "",
-	userPassword: "",
-	confirmUserPassword: "",
-	confirmationMessage: "",
+		firstName: "",
+		lastName: "",
+		email: "",
+		personalNumber: "",
+		userName: "",
+		userPassword: "",
+		confirmUserPassword: "",
+		confirmationMessage: "",
 	},
 	/**
 	 * @function 
@@ -16,8 +16,8 @@ export default {
 	 * Data user information from the registration form 
 	 * @returns nothing
 	 */
-	setField(props){
-		for(var data in props){
+	setField(props) {
+		for (var data in props) {
 			this.field[data] = props[data];
 			console.log(props[data]);
 		}
@@ -28,25 +28,25 @@ export default {
 	 * @returns {object} Confirmation or Error message from backend. 
 	 */
 	async registerUser() {
-		try{
+		try {
 			const response = await fetch(
 				'http://localhost:4567/register',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						firstName: this.field.firstName, 
-						lastName: this.field.lastName, 
-						email: this.field.email, 
+						firstName: this.field.firstName,
+						lastName: this.field.lastName,
+						email: this.field.email,
 						personalNumber: this.field.personalNumber,
-						userName: this.field.userName, 
-						userPassword: this.field.userPassword, 
-						confirmUserPassword: this.field.confirmUserPassword, 
+						userName: this.field.userName,
+						userPassword: this.field.userPassword,
+						confirmUserPassword: this.field.confirmUserPassword,
 
 					}),
 				}
 			);
-			if(!response.ok){
+			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response;
