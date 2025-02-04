@@ -14,17 +14,20 @@ import spark.Spark;
 import static spark.Spark.before;
 
 public class API {
-  public API(){
+
+  public API() {
     this(4567);
   }
-  public API(int port){
-    if (port != 4567)
+
+  public API(int port) {
+    if (port != 4567) {
       Spark.port(port);
+    }
     setUpEndpoints();
     enableCORS("http://localhost:5173", "*", "content-type");
   }
 
-  private void setUpEndpoints(){
+  private void setUpEndpoints() {
     //Spark.get("/hello/:name", this::hello);
     Spark.post("/register", this::register);
     Spark.options("/register", this::test);
@@ -52,7 +55,7 @@ public class API {
   }
    */
 
-  String test(Request req, Response res){
+  String test(Request req, Response res) {
     return "ble";
   }
 
@@ -68,9 +71,12 @@ public class API {
 
     try {
       boolean success = Controller.register(json);
-    }catch (BadApiInputException e){
+    } catch (BadApiInputException e) {
       res.status(400);
-      return "fail "+e.toString();
+      return "Bad Input:\n" + e.toString();
+    } catch (ServerException e) {
+      res.status(500);
+      return "Internal server error:\n" + e.toString();
     }
 
     return "woop woop";

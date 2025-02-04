@@ -1,38 +1,23 @@
 package com.grupp1;
+
 import java.sql.*;
 
-class DB{
+class DB {
+
   static String user = "aodaga";
   static String password = "";
   static String db = "aodaga";
   static String host = "localhost";
   static String port = "5432";
 
-    /*
-  DB(){
-    try{
-      String url = "jdbc:postgresql://"+host+":"+port+"/"+db;
-      Connection con=DriverManager.getConnection(
-          url, user, password);
-      Statement stmt=con.createStatement();
-      ResultSet rs=stmt.executeQuery("select * from availability");
-      while(rs.next())
-        System.out.println(rs.getInt(1)+"  "+rs.getInt(2)+" "+rs.getString(3)+" "+rs.getString(4));
-      con.close();
-    }catch(Exception e){ System.out.println(e);}
+  private static Connection getConn() throws SQLException {
+    String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
+    return DriverManager.getConnection(url, user, password);
   }
-     */
 
-  private static Connection getConn(){
-    try {
-      String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
-      return DriverManager.getConnection(url, user, password);
-    } catch (SQLException e) {
-      System.out.println(e);
-      throw new RuntimeException(e);
-    }
-  }
-  static void createUser(String name, String surname, String pnr, String email, String password, String username){
+  static void createUser(String name, String surname, String pnr, String email, String password,
+      String username)
+      throws SQLException {
     String query = "INSERT INTO person (name, surname, pnr, email, password, username) " +
         "VALUES (?, ?, ?, ?, ?, ?)";
     try {
@@ -47,17 +32,16 @@ class DB{
       stmt.setString(6, username);
 
       System.out.println(query);
-      stmt.execute();
+      if (!stmt.execute()) {
+        throw new SQLException("Unknown SQL Error");
+      }
+
       conn.close();
     } catch (SQLException e) {
       e.printStackTrace();
-      throw new RuntimeException(e);
+      throw e;
     }
 
 
-  }
-  public static void main(String[] args) {
-
-    DB.createUser("ernst", "hugo", "812635", "torsten@lol.va", "lösneord", "anvnamn");
   }
 }
