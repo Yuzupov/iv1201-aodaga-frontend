@@ -66,17 +66,20 @@ public class API {
 
     } catch (JsonProcessingException e) {
       System.out.println("error");
-      throw new RuntimeException(e);
+      System.out.println(e);
+      res.status(400);
+      return "Malformed json:\n" + e.getMessage().substring(0, e.getMessage().indexOf("\n"))
+          + "\r\n\r\n";
     }
 
     try {
       boolean success = Controller.register(json);
     } catch (BadApiInputException e) {
       res.status(400);
-      return "Bad Input:\n" + e.toString();
+      return "Bad Input:\n" + e.getMessage() + "\r\n\r\n";
     } catch (ServerException e) {
       res.status(500);
-      return "Internal server error:\n" + e.toString();
+      return "Internal server error:\n" + e.getMessage() + "\r\n\r\n";
     }
 
     return "woop woop";
