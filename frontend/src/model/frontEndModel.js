@@ -9,32 +9,32 @@ export default {
 	confirmUserPassword: "",
 	confirmationMessage: "",
 	},
+	/**
+	 * @function 
+	 * @name setField
+	 * @param {object} props 
+	 * Data user information from the registration form 
+	 * @returns nothing
+	 */
 	setField(props){
-		/*this method is intended to set the different fields such as firstName, lastName etc. through the use of a function instead of setting it raw. It will require that the presenter has a "field" and "field.value" naming convention. Otherwise the names of the variables below will need to be changed to match what is in the presenter
-		i.e in the presenter the data saved from view is like:
-		form={
-			firstName: "",
-			lastName: "",
-
-			:
-			
-			confirmUserPassword: "",
-		}
-		*/
-		console.log("in model" + props);
 		for(var data in props){
-			console.log("in loop in model: " + this.field[data]);
 			this.field[data] = props[data];
 			console.log(props[data]);
 		}
-		console.log("after loop: " + props);	},
-	async registerUser(props) {
+		console.log("after loop: " + props);
+	},
+	/**
+	 * @function
+	 * @name registerUser 
+	 * @returns {object} Confirmation or Error message from backend. 
+	 */
+	async registerUser() {
 		try{
 			const response = await fetch(
 				'http://localhost:4567/register',
 				{
 					method: 'POST',
-					headers: { 'Content-Type': 'text/plain' },
+					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						firstName: this.field.firstName, 
 						lastName: this.field.lastName, 
@@ -58,12 +58,4 @@ export default {
 			throw error;
 		}
 	},
-	/*
-  async registerUser() {
-	const mockResponse = { username: this.userName, message: "Mock account created!" };
-	console.log("Mock response:", mockResponse);
-	return mockResponse;
-  }
-  */
-  
 };
