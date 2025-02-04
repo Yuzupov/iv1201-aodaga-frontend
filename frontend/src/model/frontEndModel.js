@@ -21,7 +21,6 @@ export default {
 			this.field[data] = props[data];
 			console.log(props[data]);
 		}
-		console.log("after loop: " + props);
 	},
 	/**
 	 * @function
