@@ -33,23 +33,24 @@ class DB{
     }
   }
   static void createUser(String name, String surname, String pnr, String email, String password, String username){
+    String query = "INSERT INTO person (name, surname, pnr, email, password, username) " +
+        "VALUES (?, ?, ?, ?, ?, ?)";
     try {
+
       Connection conn = getConn();
-      Statement stmt = conn.createStatement();
-      StringBuilder query = new StringBuilder();
-      query.append("INSERT INTO person ");
-      query.append("(name, surname, pnr, email, password, username) VALUES (");
-      query.append("'").append(name).append("', ");
-      query.append("'").append(surname).append("', ");
-      query.append("'").append(pnr).append("', ");
-      query.append("'").append(email).append("', ");
-      query.append("'").append(password).append("', ");
-      query.append("'").append(username).append("');");
+      PreparedStatement stmt = conn.prepareStatement(query);
+      stmt.setString(1, name);
+      stmt.setString(2, surname);
+      stmt.setString(3, pnr);
+      stmt.setString(4, email);
+      stmt.setString(5, password);
+      stmt.setString(6, username);
+
       System.out.println(query);
-      stmt.execute(query.toString());
+      stmt.execute();
       conn.close();
     } catch (SQLException e) {
-      System.out.println(e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
 
