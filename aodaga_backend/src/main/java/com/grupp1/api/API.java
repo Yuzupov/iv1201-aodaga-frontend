@@ -1,26 +1,44 @@
-package com.grupp1;
+package com.grupp1.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.grupp1.Controller;
 import java.util.HashMap;
 import java.util.Map;
+
+import spark.Filter;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
 
+import static spark.Spark.before;
+
 public class API {
-  API(){
+  public API(){
     this(4567);
   }
-  API(int port){
+  public API(int port){
     if (port != 4567)
       Spark.port(port);
     setUpEndpoints();
+    enableCORS("http://localhost:5173", "*", "content-type");
   }
 
   private void setUpEndpoints(){
     //Spark.get("/hello/:name", this::hello);
     Spark.post("/register", this::register);
+    Spark.options("/register", this::test);
+  }
+
+  private static void enableCORS(final String origin, final String methods, final String headers) {
+    before(new Filter() {
+      @Override
+      public void handle(Request request, Response response) throws Exception {
+        response.header("Access-Control-Allow-Origin", origin);
+        response.header("Access-Control-Request-Method", methods);
+        response.header("Access-Control-Allow-Headers", headers);
+      }
+    });
   }
 
   /*
@@ -34,6 +52,10 @@ public class API {
   }
    */
 
+  String test(Request req, Response res){
+    return "ble";
+  }
+
   String register(Request req, Response res) {
     Map<String, Object> json;
     try {
@@ -42,28 +64,16 @@ public class API {
     } catch (JsonProcessingException e) {
       System.out.println("error");
       throw new RuntimeException(e);
-
     }
 
-      for (Map.Entry<String, Object> lol : json.entrySet()) {
-        System.out.println(lol.getKey() + " : " + lol.getValue());
-        System.out.println(lol.getValue().getClass());
+    try {
+      boolean success = Controller.register(json);
+    }catch (BadApiInputException e){
+      res.status(400);
+      return "fail "+e.toString();
+    }
 
-  /*
-  firstName: "",
-    lastName: "",
-    email: "",
-    personalNumber: "",
-    userName: "",
-    userPassword: "",
-    confirmUserPassword: "",
-    confirmationMessage: "",
-   */
-      }
-
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    return "ble";
+    return "woop woop";
   }
-
 
 }
