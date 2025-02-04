@@ -3,54 +3,38 @@ package com.grupp1;
 import com.grupp1.api.BadApiInputException;
 import com.grupp1.api.ServerException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public class Controller {
 
   public static boolean register(Map<String, Object> fields)
       throws BadApiInputException, ServerException {
-  /*
-  firstName: "",
-    lastName: "",
-    email: "",
-    personalNumber: "",
-    userName: "",
-    userPassword: "",
-    confirmUserPassword: "",
-    confirmationMessage: "",
-   */
-    String name = (String) fields.get("firstName");
-    if (fields.get("firstName").getClass() != name.getClass()) {
-      throw new BadApiInputException("bad 'firstName' parameter");
-    }
 
-    String surname = (String) fields.get("lastName");
-    if (fields.get("lastName").getClass() != surname.getClass()) {
-      throw new BadApiInputException("bad 'lastName' parameter");
-    }
-
-    String pnr = (String) fields.get("personalNumber");
-    if (fields.get("personalNumber").getClass() != pnr.getClass()) {
-      throw new BadApiInputException("bad 'personalNumber' parameter");
-    }
-
-    String email = (String) fields.get("email");
-    if (fields.get("email").getClass() != email.getClass()) {
-      throw new BadApiInputException("bad 'email' parameter");
-    }
-
-    String password = (String) fields.get("userPassword");
-    if (fields.get("userPassword").getClass() != password.getClass()) {
-      throw new BadApiInputException("bad 'userPassword' parameter");
-    }
-
-    String userName = (String) fields.get("userName");
-    if (fields.get("userName").getClass() != userName.getClass()) {
-      throw new BadApiInputException("bad 'userName' parameter");
+    String[] expectedFields = {
+        "firstName",
+        "lastName",
+        "personalNumber",
+        "email",
+        "userPassword",
+        "userName"};
+    String[] parsedFields = new String[6];
+    int i = 0;
+    for (String field : expectedFields) {
+      String f = (String) fields.get(field);
+      if (fields.get(field) == null) {
+        throw new BadApiInputException("missing '" + field + "' parameter");
+      } else if (fields.get(field).getClass() != String.class) {
+        throw new BadApiInputException("bad '" + field + "' parameter (should be string)");
+      } else if (f.length() > 255) {
+        throw new BadApiInputException("'" + field + "' too long");
+      }
+      parsedFields[i++] = f;
     }
 
     try {
-      DB.createUser(name, surname, pnr, email, password, userName);
+      DB.createUser(parsedFields[0], parsedFields[1], parsedFields[2], parsedFields[3],
+          parsedFields[4], parsedFields[5]);
     } catch (SQLException e) {
       throw new ServerException(e.toString());
     }
