@@ -1,33 +1,21 @@
 import CryptoJS from 'crypto-js';
-const ENCRYPTION_KEY = "ligma";
+var ENCRYPTION_KEY = CryptoJS.enc.Hex.parse(import.meta.env.VITE_ENC_KEY);
+
+var iv = CryptoJS.enc.Hex.parse("101112131415161718191a1b1c1d1e1f");
 
 export default {
 	fields: {
 		userCredentials: {
-			firstName: {
-				firstName: "",
-				IV: "",
-			},
-			lastName: {
-				lastName: "",
-				IV: "",
-			},
-			email: {
-				email: "",
-				IV: "",
-			},
-			personalNumber: {
-				personalNumber: "",
-				IV: "",
-			},
-			userName: {
-				userName: "",
-				IV:"",
-			},
-			userPassword: {
-				userPassword: "",
-				IV: "",
-			},
+			firstName: "",
+			lastName: "",
+			email: "",
+			personalNumber: "",
+			userName: "",
+			userPassword: "",
+		},
+		JSONCipherObject: {
+			cipher: "",
+			iv: "",
 		},
 		confirmationMessage: "",
 	},
@@ -38,29 +26,33 @@ export default {
 	 * Data user information from the registration form 
 	 * @returns nothing
 	 */
-	/*setAndEncryptField(props) {
-		for (var data in props) {
-			this.fields[data] = props[data];
-			this.fields[data] = CryptoJS.AES.encrypt(JSON.stringify(props[data]), ENCRYPTION_KEY).toString();
-			console.log(this.fields[data]);
-		}
-	},*/
 	setField(props) {
 		for (var data in props) {
-			this.fields.userCredentials[data][data] = props[data];
+			this.fields.userCredentials[data] = props[data];
 		}
 	},
-	encryptData() {
-		for (var data in this.fields.userCredentials) {
-			const encryptedObject = (CryptoJS.AES.encrypt(data, ENCRYPTION_KEY));
-			this.fields.userCredentials[data][data] = encryptedObject.toString();
-			this.fields.userCredentials[data].IV = encryptedObject.iv.toString();
-		}
-		return;
+
+	encryptJSONObject(){
+		console.log(ENCRYPTION_KEY);
+		const plainJSON = JSON.stringify({
+			firstName: this.fields.userCredentials.firstName,
+			lastName: this.fields.userCredentials.lastName,
+			email: this.fields.userCredentials.email,
+			personalNumber: this.fields.userCredentials.personalNumber,
+			userName: this.fields.userCredentials.userName,
+			userPassword: this.fields.userCredentials.userPassword,
+			confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
+
+		});
+		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, ENCRYPTION_KEY, { iv: iv });
+		this.fields.JSONCipherObject.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
+		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString();
+		console.log(this.fields.JSONCipherObject);
+
 	},
 	setAndEncryptUserData(props) {
 		this.setField(props);
-		this.encryptData();
+		this.encryptJSONObject();
 	},
 	/**
 	 * @function
@@ -74,16 +66,7 @@ export default {
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						firstName: this.fields.userCredentials.firstName,
-						lastName: this.fields.userCredentials.lastName,
-						email: this.fields.userCredentials.email,
-						personalNumber: this.fields.userCredentials.personalNumber,
-						userName: this.fields.userCredentials.userName,
-						userPassword: this.fields.userCredentials.userPassword,
-						confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
-
-					}),
+					body: JSON.stringify(this.fields.JSONCipherObject),
 				}
 			);
 			if (!response.ok) {
