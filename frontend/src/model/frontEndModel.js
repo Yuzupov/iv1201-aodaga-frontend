@@ -1,12 +1,34 @@
+import CryptoJS from 'crypto-js';
+const ENCRYPTION_KEY = "ligma";
+
 export default {
-	field: {
-		firstName: "",
-		lastName: "",
-		email: "",
-		personalNumber: "",
-		userName: "",
-		userPassword: "",
-		confirmUserPassword: "",
+	fields: {
+		userCredentials: {
+			firstName: {
+				firstName: "",
+				IV: "",
+			},
+			lastName: {
+				lastName: "",
+				IV: "",
+			},
+			email: {
+				email: "",
+				IV: "",
+			},
+			personalNumber: {
+				personalNumber: "",
+				IV: "",
+			},
+			userName: {
+				userName: "",
+				IV:"",
+			},
+			userPassword: {
+				userPassword: "",
+				IV: "",
+			},
+		},
 		confirmationMessage: "",
 	},
 	/**
@@ -16,11 +38,29 @@ export default {
 	 * Data user information from the registration form 
 	 * @returns nothing
 	 */
+	/*setAndEncryptField(props) {
+		for (var data in props) {
+			this.fields[data] = props[data];
+			this.fields[data] = CryptoJS.AES.encrypt(JSON.stringify(props[data]), ENCRYPTION_KEY).toString();
+			console.log(this.fields[data]);
+		}
+	},*/
 	setField(props) {
 		for (var data in props) {
-			this.field[data] = props[data];
-			console.log(props[data]);
+			this.fields.userCredentials[data][data] = props[data];
 		}
+	},
+	encryptData() {
+		for (var data in this.fields.userCredentials) {
+			const encryptedObject = (CryptoJS.AES.encrypt(data, ENCRYPTION_KEY));
+			this.fields.userCredentials[data][data] = encryptedObject.toString();
+			this.fields.userCredentials[data].IV = encryptedObject.iv.toString();
+		}
+		return;
+	},
+	setAndEncryptUserData(props) {
+		this.setField(props);
+		this.encryptData();
 	},
 	/**
 	 * @function
@@ -35,13 +75,13 @@ export default {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						firstName: this.field.firstName,
-						lastName: this.field.lastName,
-						email: this.field.email,
-						personalNumber: this.field.personalNumber,
-						userName: this.field.userName,
-						userPassword: this.field.userPassword,
-						confirmUserPassword: this.field.confirmUserPassword,
+						firstName: this.fields.userCredentials.firstName,
+						lastName: this.fields.userCredentials.lastName,
+						email: this.fields.userCredentials.email,
+						personalNumber: this.fields.userCredentials.personalNumber,
+						userName: this.fields.userCredentials.userName,
+						userPassword: this.fields.userCredentials.userPassword,
+						confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
 
 					}),
 				}
@@ -49,7 +89,7 @@ export default {
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			const data = await response;
+			const data = response;
 			console.log(`Returned: ${data}`);
 			return data;
 		} catch (error) {
