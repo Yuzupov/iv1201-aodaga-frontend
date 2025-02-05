@@ -9,6 +9,7 @@ const CreateView = () => {
     personalNumber: "", 
     username: "", 
     userPassword: "", 
+    confirmUserPassword: "", 
   });
 
   const [message, setMessage] = useState(""); 
@@ -24,7 +25,6 @@ const CreateView = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    
     CreatePresenter.submitForm(
       formData,
       (data) => setMessage(`Account created successfully: ${data.username}`), 
@@ -45,6 +45,7 @@ const CreateView = () => {
           { label: "Personal Number", name: "personalNumber", type: "text" },
           { label: "Username", name: "username", type: "text" },
           { label: "Password", name: "userPassword", type: "password" },
+          { label: "Confirm Password", name: "confirmUserPassword", type: "password" }, 
         ].map((field) => (
           <div key={field.name} className="flex flex-col">
             <label htmlFor={field.name} className="text-lg font-medium">
