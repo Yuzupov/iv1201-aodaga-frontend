@@ -1,6 +1,17 @@
 import frontEndModel from "../model/frontEndModel";
-
+/**
+ * @constant
+ * @name fetchApplications
+ * A presenter that lists applications
+ * @returns nothing
+ */
 const ListApplicationsPresenter = {
+  /**
+   * @function
+   * @name fetchApplications
+   * fetches applications from the backend through the model
+   * @returns Either a confirmation or error message to the view
+   */
   fetchApplications: async (onSuccess, onError) => {
     try {
       const applications = await frontEndModel.fetchApplications();

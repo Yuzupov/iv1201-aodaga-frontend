@@ -1,19 +1,30 @@
 import React, { useState } from "react";
 import CreatePresenter from "../presenter/createPresenter";
-
+/**
+ * @constant
+ * @name CreateView
+ * Creates a view for registering an account
+ * @returns A view for the registration section
+ */
 const CreateView = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    personalNumber: "", 
-    username: "", 
-    userPassword: "", 
-    confirmUserPassword: "", 
+    personalNumber: "",
+    username: "",
+    userPassword: "",
+    confirmUserPassword: "",
   });
 
-  const [message, setMessage] = useState(""); 
-
+  const [message, setMessage] = useState("");
+  /**
+   * @function
+   * @name handleChange
+   * A handler for state changes in the registration form
+   * @param {event object} e
+   * @returns nothing 
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -21,14 +32,20 @@ const CreateView = () => {
       [name]: value,
     }));
   };
-
+  /**
+   * @function
+   * @name handleSubmit
+   * A handler for submitting the form, passes data to presenter
+   * @param {event object} e
+   * @returns nothing 
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
 
     CreatePresenter.submitForm(
       formData,
-      (data) => setMessage(`Account created successfully: ${data.username}`), 
-      (error) => setMessage(`Error: ${error}`) 
+      (data) => setMessage(`Account created successfully: ${data.username}`),
+      (error) => setMessage(`Error: ${error}`)
     );
   };
 
@@ -44,11 +61,10 @@ const CreateView = () => {
         </p>
         {message && (
           <p
-            className={`text-center mb-4 p-2 rounded ${
-              message.startsWith("Error")
-                ? "bg-red-500 text-white"
-                : "bg-green-500 text-white"
-            }`}
+            className={`text-center mb-4 p-2 rounded ${message.startsWith("Error")
+              ? "bg-red-500 text-white"
+              : "bg-green-500 text-white"
+              }`}
           >
             {message}
           </p>
