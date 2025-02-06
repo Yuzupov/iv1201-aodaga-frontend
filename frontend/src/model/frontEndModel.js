@@ -23,7 +23,12 @@ export default {
 		}
 		*/
 
-    this[props.field] = props.field.value;
+    //this[props.field] = props.field.value;
+	for (const field in props) {
+		if (Object.prototype.hasOwnProperty.call(props, field)) {
+		  this[field] = props[field];
+		}
+	  }
   },
   /*async registerUser() {
     try {

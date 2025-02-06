@@ -1,8 +1,9 @@
+import "./styles/App.css";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CreatePage from "./view/createPage";
-import LoginView from "./view/loginView"; // Import the Login View
-import ListApplicationsView from "./view/listApplicationsView"; // Import the Applications List View
+import LoginView from "./view/loginView"; 
+import ListApplicationsView from "./view/listApplicationsView"; 
 
 const App = () => (
   <Router>
