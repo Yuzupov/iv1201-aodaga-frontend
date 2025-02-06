@@ -1,14 +1,14 @@
-import frontEndModel from "../model/frontEndModel"; 
+import frontEndModel from "../model/frontEndModel.js";
 
 const CreatePresenter = {
   submitForm: async (formData, onSuccess, onError) => {
     try {
-      	frontEndModel.setField(formData);
+      frontEndModel.setAndEncryptUserData(formData);
       const response = await frontEndModel.registerUser();
-      onSuccess(response); 
+      onSuccess(response);
     } catch (error) {
-      console.error("Error in CreatePresenter:", error.message);
-      onError(error.message); 
+      console.error("Error in CreatePresenter:", error);
+      onError(error.message);
     }
   },
 };
