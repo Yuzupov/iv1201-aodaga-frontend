@@ -10,7 +10,7 @@ export default {
 			lastName: "",
 			email: "",
 			personalNumber: "",
-			userName: "",
+			username: "",
 			userPassword: "",
 		},
 		JSONCipherObject: {
@@ -39,7 +39,7 @@ export default {
 			lastName: this.fields.userCredentials.lastName,
 			email: this.fields.userCredentials.email,
 			personalNumber: this.fields.userCredentials.personalNumber,
-			userName: this.fields.userCredentials.userName,
+			username: this.fields.userCredentials.username,
 			userPassword: this.fields.userCredentials.userPassword,
 			confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
 
