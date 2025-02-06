@@ -3,9 +3,16 @@ package com.grupp1.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grupp1.Controller;
+
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import spark.Filter;
 import spark.Request;
 import spark.Response;
@@ -44,25 +51,23 @@ public class API {
     });
   }
 
-  /*
-  String hello(Request request, Response response){
-    System.out.println("body: " + request.body());
-    System.out.println("attributes: " + request.attributes());
-    System.out.println("params: " + request.params());
-    System.out.println("query: " + request.queryParams());
-    System.out.println("queryg: " + request.queryParams("g"));
-    return "Hello" + request.params(":name");
-  }
-   */
-
   String test(Request req, Response res) {
     return "ble";
   }
 
+  String decryptString(String cipher) throws JsonProcessingException, BadApiInputException {
+    Map<String, String> jsoncrypt;
+    jsoncrypt = new ObjectMapper().readValue(cipher, HashMap.class);
+    return Crypt.decrypt(jsoncrypt.get("cipher"), jsoncrypt.get("iv"));
+  }
+
   String register(Request req, Response res) {
+
     Map<String, Object> json;
     try {
-      json = new ObjectMapper().readValue(req.body(), HashMap.class);
+      String requestBody = req.body();
+      requestBody = decryptString(requestBody);
+      json = new ObjectMapper().readValue(requestBody, HashMap.class);
 
     } catch (JsonProcessingException e) {
       System.out.println("error");
@@ -70,6 +75,9 @@ public class API {
       res.status(400);
       return "Malformed json:\n" + e.getMessage().substring(0, e.getMessage().indexOf("\n"))
           + "\r\n\r\n";
+    } catch (Throwable e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
     }
 
     try {
