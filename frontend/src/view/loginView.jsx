@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import LoginPresenter from "../presenter/loginPresenter";
-
+/**
+ * @constant
+ * @name LoginView
+ * A view for the login section
+ * @returns the view responsible for the login case
+ */
 const LoginView = () => {
   const [formData, setFormData] = useState({
     username: "",
     userPassword: "",
   });
 
-  const [message, setMessage] = useState(""); 
-
+  const [message, setMessage] = useState("");
+  /**
+   * @function
+   * @name handleChange
+   * a handler for state changes in the login form
+   * @param {event object} e
+   * @returns nothing 
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -16,14 +27,20 @@ const LoginView = () => {
       [name]: value,
     }));
   };
-
+  /**
+   * @function
+   * @name handleSubmit
+   * A handler for submitting the form, passes data to the presenter
+   * @param {event object} e
+   * @returns nothing 
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
 
     LoginPresenter.submitLogin(
       formData,
-      (data) => setMessage(`Login successful! Welcome, ${data.userName}`), 
-      (error) => setMessage(`Error: ${error}`) 
+      (data) => setMessage(`Login successful! Welcome, ${data.userName}`),
+      (error) => setMessage(`Error: ${error}`)
     );
   };
 

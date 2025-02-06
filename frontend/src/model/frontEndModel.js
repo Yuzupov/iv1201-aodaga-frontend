@@ -31,8 +31,13 @@ export default {
 			this.fields.userCredentials[data] = props[data];
 		}
 	},
-
-	encryptJSONObject(){
+	/**
+	 * @function
+	 * @name encryptJSONObject
+	 * Encrypts the user data in the model
+	 * @returns nothing
+	 */
+	encryptJSONObject() {
 		console.log(ENCRYPTION_KEY);
 		const plainJSON = JSON.stringify({
 			firstName: this.fields.userCredentials.firstName,
@@ -50,6 +55,13 @@ export default {
 		console.log(this.fields.JSONCipherObject);
 
 	},
+	/**
+	 * @function
+	 * @name setAndEncryptUserData
+	 * @param {object} props 
+	 * Sets and encrypts the user data.
+	 * @returns nothing
+	 */
 	setAndEncryptUserData(props) {
 		this.setField(props);
 		this.encryptJSONObject();
@@ -57,7 +69,8 @@ export default {
 	/**
 	 * @function
 	 * @name registerUser 
-	 * @returns {object} Confirmation or Error message from backend. 
+	 * Sends a POST request to the back-end to register a user.
+	 * @returns {object} Confirmation or Error object from backend. 
 	 */
 	async registerUser() {
 		try {

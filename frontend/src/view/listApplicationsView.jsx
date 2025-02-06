@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ListApplicationsPresenter from "../presenter/listApplicationsPresenter";
-
+/**
+ * @constant
+ * @name ListApplicationsView
+ * A view to list the applications
+ * @returns the view with the applications
+ */
 const ListApplicationsView = () => {
   const [applications, setApplications] = useState([]);
   const [error, setError] = useState("");
-
+  /**
+   * @function
+   * @name useEffect
+   * A state handler from react
+   * @returns nothing
+   */
   useEffect(() => {
     // Fetch applications on component mount
     ListApplicationsPresenter.fetchApplications(
