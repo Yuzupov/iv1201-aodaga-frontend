@@ -16,7 +16,7 @@ public class Controller {
         "personalNumber",
         "email",
         "userPassword",
-        "userName"};
+        "username"};
     String[] parsedFields = new String[6];
     int i = 0;
     for (String field : expectedFields) {
