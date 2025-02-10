@@ -50,7 +50,7 @@ const CreateView = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-900 text-gray-200">
+    <div className="h-screen w-screen flex items-center justify-center bg-gray-900 text-gray-200">
       <div className="w-full max-w-md px-8 py-12 bg-gray-900 shadow-lg rounded-lg">
         <h1 className="text-4xl font-bold mb-6 text-center">Create an Account</h1>
         <p className="text-sm mb-8 text-center">
