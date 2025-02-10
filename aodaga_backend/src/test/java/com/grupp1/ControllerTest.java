@@ -9,18 +9,12 @@ import junit.framework.TestCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 public class ControllerTest extends TestCase {
 
+//TODO I need to implement a teardown where the user is removed from the database.
 
   /**
-   * what to test for in register():
-   * 1. missing fields
-   * 2. null fields
-   * 3. 0 < length of fields < 255 chars
-   * 4. personal number format
-   * 5. email format
-   * 6. that input is string
+   * public void testRegisterMissingField()
+   * Test what happens if a field is missing
    * @throws JsonProcessingException
-   * @throws BadApiInputException
-   * @throws ServerException
    */
   public void testRegisterMissingField() throws JsonProcessingException{
     String missingFieldJson = "{"
@@ -28,7 +22,7 @@ public class ControllerTest extends TestCase {
         +"\"lastName\" : \"ost\","
         +"\"email\" : \"feta@ost.com\","
         +"\"personalNumber\" : \"12345588-9876\","
-        +"\"userName\" : \"feta\","
+        +"\"username\" : \"feta\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -46,14 +40,20 @@ public class ControllerTest extends TestCase {
       assertEquals("missing 'userPassword' parameter", message);
     }
   }
+
+  /**
+   * public void testRegisterNullField()
+   * Test what happens if i field value is null
+   * @throws JsonProcessingException
+   */
   public void testRegisterNullField() throws JsonProcessingException {
     String nullFielsJson = "{"
         + "\"firstName\" : \"feta\","
         + "\"lastName\" : \"ost\","
         + "\"email\" : \"feta@ost.com\","
         + "\"personalNumber\" : \"12345588-9876\","
-        + "\"userName\" : \"feta\","
-        + "\"UserPassword\" : null,"
+        + "\"username\" : \"feta\","
+        + "\"userPassword\" : null,"
         + "\"confirmUserPassword\" : \"\""
         + "}";
 
@@ -72,14 +72,19 @@ public class ControllerTest extends TestCase {
     }
   }
 
+  /**
+   * public void testRegisterEmptyStringField()
+   * test what happens if a field value is an empty string
+   * @throws JsonProcessingException
+   */
   public void testRegisterEmptyStringField() throws JsonProcessingException {
     String emptyFirstNameStringJson = "{"
         +"\"firstName\" : \"\","
         +"\"lastName\" : \"ost\","
         +"\"email\" : \"feta@ost.com\","
         +"\"personalNumber\" : \"12345588-9876\","
-        +"\"userName\" : \"feta\","
-        +"\"UserPassword\" : \"ost\","
+        +"\"username\" : \"feta\","
+        +"\"userPassword\" : \"ost\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -97,14 +102,20 @@ public class ControllerTest extends TestCase {
       assertEquals("'firstName' too short", message);
     }
   }
+
+  /**
+   * public void testRegisterTooLongField()
+   * test what happens if a field value is longer than 255 chars
+   * @throws JsonProcessingException
+   */
   public void testRegisterTooLongField() throws JsonProcessingException {
     String tooLongLastNameJson = "{"
         +"\"firstName\" : \"feta\","
-        +"\"lastName\" : \"ostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostost\","
+        +"\"lastName\" : \"ostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostostost\","
         +"\"email\" : \"feta@ost.com\","
         +"\"personalNumber\" : \"12345588-9876\","
-        +"\"userName\" : \"feta\","
-        +"\"UserPassword\" : \"ost\","
+        +"\"username\" : \"feta\","
+        +"\"userPassword\" : \"ost\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -122,14 +133,20 @@ public class ControllerTest extends TestCase {
       assertEquals("'lastName' too long", message);
     }
   }
+
+  /**
+   * public void testRegisterWrongTypeField()
+   * test what happens if field value is not of String type
+   * @throws JsonProcessingException
+   */
   public void testRegisterWrongTypeField() throws JsonProcessingException {
     String lastNameNotStringJson = "{"
         +"\"firstName\" : \"feta\","
         +"\"lastName\" : 18274,"
         +"\"email\" : \"feta@ost.com\","
         +"\"personalNumber\" : \"12345588-9876\","
-        +"\"userName\" : \"feta\","
-        +"\"UserPassword\" : \"ost\","
+        +"\"username\" : \"feta\","
+        +"\"userPassword\" : \"ost\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -147,14 +164,20 @@ public class ControllerTest extends TestCase {
       assertEquals("bad 'lastName' parameter (should be string)", message);
     }
   }
+
+  /**
+   * public void testRegisterWrongPersonalNumberFormatField()
+   * test what happens if personalNumber is on the wrong format
+   * @throws JsonProcessingException
+   */
   public void testRegisterWrongPersonalNumberFormatField() throws JsonProcessingException {
     String wrongPersonalNumberFormatJson = "{"
         +"\"firstName\" : \"feta\","
         +"\"lastName\" : \"ost\","
         +"\"email\" : \"feta@ost.com\","
         +"\"personalNumber\" : \"123455\","
-        +"\"userName\" : \"feta\","
-        +"\"UserPassword\" : \"ost\","
+        +"\"username\" : \"feta\","
+        +"\"userPassword\" : \"ost\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -172,14 +195,20 @@ public class ControllerTest extends TestCase {
       //assertEquals("invalid 'lastName' too long", message);
     }
   }
+
+  /**
+   * public void testRegisterWrongEmailFormatField()
+   * test what happens if email is on the wrong format
+   * @throws JsonProcessingException
+   */
   public void testRegisterWrongEmailFormatField() throws JsonProcessingException {
     String badEmailJson = "{"
         +"\"firstName\" : \"feta\","
         +"\"lastName\" : \"ost\","
         +"\"email\" : \"feta@ost\","
         +"\"personalNumber\" : \"12345588-9876\","
-        +"\"userName\" : \"feta\","
-        +"\"UserPassword\" : \"ost\","
+        +"\"username\" : \"feta\","
+        +"\"userPassword\" : \"ost\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -197,14 +226,22 @@ public class ControllerTest extends TestCase {
       //assertEquals("invalid 'lastName' too long", message);
     }
   }
+
+  /**
+   * public void testRegister()
+   * test what happens if nothing is wtong with the input
+   * @throws JsonProcessingException
+   * @throws BadApiInputException
+   * @throws ServerException
+   */
   public void testRegister() throws JsonProcessingException, BadApiInputException, ServerException {
     String okJson = "{"
         +"\"firstName\" : \"feta\","
         +"\"lastName\" : \"ost\","
         +"\"email\" : \"feta@ost.com\","
         +"\"personalNumber\" : \"12345588-9876\","
-        +"\"userName\" : \"feta\","
-        +"\"UserPassword\" : \"ost\","
+        +"\"username\" : \"feta\","
+        +"\"userPassword\" : \"ost\","
         +"\"confirmUserPassword\" : \"\""
         +"}";
 
@@ -216,7 +253,7 @@ public class ControllerTest extends TestCase {
       assertTrue(Controller.register(map));
     }
     catch (Exception e){
-      fail("Exception was thrown");
+      fail("Exception " + e +" was thrown");
     }
   }
 }
