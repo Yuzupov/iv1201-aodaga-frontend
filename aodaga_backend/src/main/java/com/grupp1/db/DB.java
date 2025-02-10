@@ -1,8 +1,8 @@
-package com.grupp1;
+package com.grupp1.db;
 
 import java.sql.*;
 
-class DB {
+public class DB {
 
   static String user = "aodaga";
   static String password = "";
@@ -15,7 +15,8 @@ class DB {
     return DriverManager.getConnection(url, user, password);
   }
 
-  static void createUser(String name, String surname, String pnr, String email, String password,
+  public static void createUser(String name, String surname, String pnr, String email,
+      String password,
       String username)
       throws SQLException {
     String query = "INSERT INTO person (name, surname, pnr, email, password, username, role_id) " +

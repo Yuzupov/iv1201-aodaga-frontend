@@ -1,18 +1,8 @@
 package com.grupp1.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grupp1.Controller;
+import com.grupp1.controller.Controller;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import org.json.JSONObject;
 import spark.Filter;
 import spark.Request;
 import spark.Response;
@@ -55,42 +45,31 @@ public class API {
     return "ble";
   }
 
-  String decryptString(String cipher) throws JsonProcessingException, BadApiInputException {
-    Map<String, String> jsoncrypt;
-    jsoncrypt = new ObjectMapper().readValue(cipher, HashMap.class);
-    return Crypt.decrypt(jsoncrypt.get("cipher"), jsoncrypt.get("iv"));
-  }
-
   String register(Request req, Response res) {
-
-    Map<String, Object> json;
     try {
-      String requestBody = req.body();
-      requestBody = decryptString(requestBody);
-      json = new ObjectMapper().readValue(requestBody, HashMap.class);
+      JSONObject cryptJson = Json.parseJson(req.body());
+      Validation.validateEncrypted(cryptJson);
+      JSONObject json = Crypt.decryptJson(cryptJson);
+      Validation.validateRegister(json);
 
-    } catch (JsonProcessingException e) {
-      System.out.println("error");
-      System.out.println(e);
-      res.status(400);
-      return "Malformed json:\n" + e.getMessage().substring(0, e.getMessage().indexOf("\n"))
-          + "\r\n\r\n";
-    } catch (Throwable e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
+      String firstName = json.getString("firstName");
+      String lastName = json.getString("lastName");
+      String personalNumber = json.getString("personalNumber");
+      String email = json.getString("email");
+      String userPassword = json.getString("userPassword");
+      String userName = json.getString("username");
+      Controller.register(firstName, lastName, personalNumber, email, userPassword, userName);
+      return "woop woop";
 
-    try {
-      boolean success = Controller.register(json);
-    } catch (BadApiInputException e) {
+    } catch (APIException e) {
       res.status(400);
       return "Bad Input:\n" + e.getMessage() + "\r\n\r\n";
     } catch (ServerException e) {
       res.status(500);
       return "Internal server error:\n" + e.getMessage() + "\r\n\r\n";
+    } catch (Throwable e) {
+      e.printStackTrace();
+      throw new RuntimeException(e.getMessage());
     }
-
-    return "woop woop";
   }
-
 }
