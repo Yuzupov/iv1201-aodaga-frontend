@@ -34,6 +34,11 @@ export default {
 			this.fields.userCredentials[data] = props[data];
 		}
 	},
+	unSetUserCredentials(){
+		for(var credential in this.fields.userCredentials){
+			credential = "";
+		}
+	},
 	/**
 	 * @function
 	 * @name encryptJSONObject
@@ -119,25 +124,88 @@ e2+cS/dHkYPwTgZbKw==
 	 * Sends a POST request to the back-end to register a user.
 	 * @returns {object} Confirmation or Error object from backend. 
 	 */
-	async registerUser() {
+	loginUsername(){
 		try {
-			const response = await fetch(
-				'http://localhost:4567/register',
+			const response = await fetch('http://localhost:4567/login',
 				{
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(this.fields.JSONCipherObject),
+					headers: { 'Content-Type': 'application/json' }.
+					body: JSON.stringify({ 
+						username: this.fields.userCredentials.username,
+						userPassword: this.fields.userCredentials.userPassword,
+					});
+					
 				}
 			);
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = response;
-			console.log(`Returned: ${data}`);
+			console.log(`Returned data from login: ${data}`);
 			return data;
+
 		} catch (error) {
-			console.error(`Error when registering: ${error}`);
+			console.log(`error: ${error}`);
 			throw error;
 		}
 	},
+
+	loginEmail(){
+		try {
+			const response = await fetch('http://localhost:4567/login',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' }.
+					body: JSON.stringify({ 
+						email: this.fields.userCredentials.email,
+						username: this.fields.userCredentials.userPassword,
+					});
+					
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			const data = response;
+			console.log(`Returned data from login: ${data}`);
+			return data;
+
+		} catch (error) {
+			console.log(`error: ${error}`);
+			throw error;
+		}
+
+	},
+
+	async login(props) {
+		this.setField(props);
+		if(props[username]){
+			loginUsername();
+		} else if(props[email]){
+			loginEmail();
+		} else {
+			throw error;
+		}
+	},
+		async registerUser() {
+			try {
+				const response = await fetch(
+					'http://localhost:4567/register',
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify(this.fields.JSONCipherObject),
+					}
+				);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const data = response;
+				console.log(`Returned: ${data}`);
+				return data;
+			} catch (error) {
+				console.error(`Error when registering: ${error}`);
+				throw error;
+			}
+		},
 };
