@@ -39,6 +39,16 @@ export default {
 			credential = "";
 		}
 	},
+	parseData(props){
+		var listOfApplicants = [];
+		var parsedProps = JSON.parse(props);
+		var i = 0;
+		for(var applicantData in parsedProps.data.listOfApplicants){
+			listOfApplicants[i] = applicantData;
+			i++;
+		}
+		return listOfApplicants;
+	},
 	/**
 	 * @function
 	 * @name encryptJSONObject
@@ -187,25 +197,49 @@ e2+cS/dHkYPwTgZbKw==
 			throw error;
 		}
 	},
-		async registerUser() {
-			try {
-				const response = await fetch(
-					'http://localhost:4567/register',
-					{
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify(this.fields.JSONCipherObject),
-					}
-				);
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
+	async registerUser() {
+		try {
+			const response = await fetch(
+				'http://localhost:4567/register',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
 				}
-				const data = response;
-				console.log(`Returned: ${data}`);
-				return data;
-			} catch (error) {
-				console.error(`Error when registering: ${error}`);
-				throw error;
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-		},
+			const data = response;
+			console.log(`Returned: ${data}`);
+			return data;
+		} catch (error) {
+			console.error(`Error when registering: ${error}`);
+			throw error;
+		}
+	},
+	async listApplicants() {
+		try {
+			const response = await fetch(
+				'http://localhost:4567/list-applicants'.
+				{
+					method: 'GET',
+					headers: { 'Content-Type': 'application/json },
+					//maybe some auth here?
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			const data = response;
+			console.log(data);
+			parsedData = this.parseData(response);
+			console.log(parsedData);
+			return parsedData;
+			
+		} catch (error) {
+			console.error(`Error when requesting applicants: ${error}`);	
+			throw error;
+		}
+	},
 };
