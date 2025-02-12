@@ -42,13 +42,17 @@ export default {
 	parseData(props){
 		var listOfApplicants = [];
 		var parsedProps = JSON.parse(props);
+		listOfApplicants = parsedProps.applicants;
+		/*
 		var i = 0;
 		for(var applicantData in parsedProps.data.listOfApplicants){
 			listOfApplicants[i] = applicantData;
 			i++;
 		}
+		*/
 		return listOfApplicants;
 	},
+
 	/**
 	 * @function
 	 * @name encryptJSONObject
