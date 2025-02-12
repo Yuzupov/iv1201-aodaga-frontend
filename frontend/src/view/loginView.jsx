@@ -45,13 +45,14 @@ const LoginView = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="h-screen w-screen flex items-center justify-center bg-linear-65 from-purple-800 to-red-400">
+    <div className="w-full max-w-md px-8 py-12 bg-gray-900 shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
       {message && <p className="text-red-500">{message}</p>} {/* Display success/error message */}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { label: "Username", name: "username", type: "text" },
+          { label: "Username or Email", name: "username", type: "text" },
           { label: "Password", name: "userPassword", type: "password" },
         ].map((field) => (
           <div key={field.name} className="flex flex-col">
@@ -70,9 +71,10 @@ const LoginView = () => {
           </div>
         ))}
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Login
+          Login 
         </button>
       </form>
+    </div>
     </div>
   );
 };

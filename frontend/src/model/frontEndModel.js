@@ -138,16 +138,16 @@ e2+cS/dHkYPwTgZbKw==
 	 * Sends a POST request to the back-end to register a user.
 	 * @returns {object} Confirmation or Error object from backend. 
 	 */
-	loginUsername(){
+	async loginUsername(){
 		try {
 			const response = await fetch('http://localhost:4567/login',
 				{
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' }.
+					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ 
 						username: this.fields.userCredentials.username,
 						userPassword: this.fields.userCredentials.userPassword,
-					});
+					})
 					
 				}
 			);
@@ -164,16 +164,16 @@ e2+cS/dHkYPwTgZbKw==
 		}
 	},
 
-	loginEmail(){
+	async loginEmail(){
 		try {
 			const response = await fetch('http://localhost:4567/login',
 				{
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' }.
+					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ 
 						email: this.fields.userCredentials.email,
-						username: this.fields.userCredentials.userPassword,
-					});
+						userPassword: this.fields.userCredentials.userPassword,
+					})
 					
 				}
 			);
@@ -225,10 +225,10 @@ e2+cS/dHkYPwTgZbKw==
 	async listApplicants() {
 		try {
 			const response = await fetch(
-				'http://localhost:4567/list-applicants'.
+				'http://localhost:4567/list-applicants',
 				{
 					method: 'GET',
-					headers: { 'Content-Type': 'application/json },
+					headers: { 'Content-Type': 'application/json' },
 					//maybe some auth here?
 				}
 			);
@@ -237,7 +237,7 @@ e2+cS/dHkYPwTgZbKw==
 			}
 			const data = response;
 			console.log(data);
-			parsedData = this.parseData(response);
+			const parsedData = this.parseData(response);
 			console.log(parsedData);
 			return parsedData;
 			
