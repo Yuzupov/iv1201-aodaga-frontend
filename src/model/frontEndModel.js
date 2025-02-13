@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js';
 import JSEncrypt from 'jsencrypt';
 import secureRandom from 'secure-random';
 
-const HEROKU_URI = 'https://recruitment-application-backe-bc537da7a4bd.herokuapp.com/'
+const HEROKU_URI = 'https://recruitment-application-backe-bc537da7a4bd.herokuapp.com';
 const PORT = '80';
 var iv = CryptoJS.enc.Hex.parse("101112131415161718191a1b1c1d1e1f");
 
@@ -120,7 +120,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 	 */
 	async loginUsername(){
 		try {
-			const response = await fetch(HEROKU_URI + PORT + '/login',
+			const response = await fetch(HEROKU_URI + '/login',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -146,7 +146,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 
 	async loginEmail(){
 		try {
-			const response = await fetch(HEROKU_URI + PORT + '/login',
+			const response = await fetch(HEROKU_URI + '/login',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -183,7 +183,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 	},
 	async registerUser() {
 		try {
-			const response = await fetch(HEROKU_URI + PORT + '/register',
+			const response = await fetch(HEROKU_URI + '/register',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -203,7 +203,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 	},
 	async listApplicants() {
 		try {
-			const response = await fetch(HEROKU_URI + PORT + '/applicants',
+			const response = await fetch(HEROKU_URI + '/applicants',
 				{
 					method: 'GET',
 					headers: { 'Content-Type': 'application/json' },
