@@ -1,0 +1,2 @@
+web: cd frontend && ls && npm install && npm list && npm run build && ls && npm start
+
