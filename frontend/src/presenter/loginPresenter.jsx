@@ -15,8 +15,6 @@ const LoginPresenter = {
    */
   submitLogin: async (formData, onSuccess, onError) => {
     try {
-
-      frontEndModel.encryptJSONObject(formData);
       const response = await frontEndModel.login(formData);
       //const isEmail = formData.username.includes("@");
       if (!response || !response.userPassword || !response.username || !response.email) {
