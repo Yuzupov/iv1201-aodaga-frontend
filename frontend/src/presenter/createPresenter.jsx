@@ -14,7 +14,6 @@ const CreatePresenter = {
    */
   submitForm: async (formData, onSuccess, onError) => {
     try {
-      frontEndModel.setAndEncryptUserData(formData);
       if (formData.userPassword !== formData.confirmUserPassword) {
         throw new Error("Passwords do not match");
       }
@@ -25,10 +24,7 @@ const CreatePresenter = {
       if (!pnrRegex.test(formData.personalNumber)) {
         throw new Error("Invalid personalnumber format")
       }
-      frontEndModel.setField(formData);
-      // for (const [field, value] of Object.entries(formData)) {
-      //   frontEndModel.setField({ field, value });
-      // }
+      frontEndModel.setAndEncryptUserData(formData);
       const response = await frontEndModel.registerUser();
       onSuccess(response);
     } catch (error) {
