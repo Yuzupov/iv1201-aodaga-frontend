@@ -2,14 +2,11 @@ import CryptoJS from 'crypto-js';
 import JSEncrypt from 'jsencrypt';
 import secureRandom from 'secure-random';
 
-const HEROKU_URI = 'https://recruitment-application-backe-bc537da7a4bd.herokuapp.com';
-const LOCALHOST_URI = 'http://localhost:4567';
-const PORT = '80';
-const PUBLIC_KEY = `
-"-----BEGIN PRIVATE KEY-----
-MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBALVtRzmA5aSxe1QRIco3IVpolewxmYehk0uFfET/YD4YZZz/XoQIO+twbJqOC6RzSIHbahcWKwqFhl3zowp6+vgX0QeRyA4yVef0LhzsZoNsXTJ1p6mVMR432YboA3Ln5vw6TgdlpUl2uRhHnKtAxlpfIh4ZN0vUeaJZUS3eRdwfAgMBAAECgYEAl99TiSqCkjxUPgpdW9aMoA7+uYrHt8ck80pZvbR9j12C6krHhwURi8Q/1Z1k15P9tV7ET3EqNJOT6GAEMsjB/rWvOmzRi2qBfcZF3qv9GWpDVONk8SFqoqLAspgxKJvl9dIj4gVH2yBjI2YtKUDFQ9m9fDWPahuwc6cpkGaEBEkCQQDamIChPvXrT/kw3HXRuRj9zBOxkVtA6cVxInH3SQXYzU0F6K4SceB34q24UccfoR7b/MTrReqAzSU4buhFd+IDAkEA1HicAzcLpmwXbTGqTlSGWCCsugI11Eqc6+/emMAPKHH6PSpS21BW6+2mpFz1CmUF6Pfvj7RWMUaND6ZrNQuwtQJBAKvK6GRQ59HsAwoMaKfO0T48kUme09mbHyl/iZNvFyJAjoTTTWJ/joqJYj+WPWi1Jlx7NYM1akuZbeQA/ZgC1GMCQQCxpG18WqeI61Li3uVvPEheomMH2hU7e26b7R+FQv7pZ/I69Yn1B8TE2Ru8zGOr3y8Dy1gmJDb0V/JUpWV5Il8JAkEAl2jydoxaf4lymJq7N6e9wOWJCeafa/rppq7vtoddz+RvfFPyiH36Vpi5k5PBJdAYBsJe
-e2+cS/dHkYPwTgZbKw==
-	-----END PRIVATE KEY-----`;
+var URI = 'https://recruitment-application-backe-bc537da7a4bd.herokuapp.com';
+if (window.location.hostname === "localhost"){
+	URI = 'http://localhost:4567';
+}
+
 var iv = CryptoJS.enc.Hex.parse("101112131415161718191a1b1c1d1e1f");
 
 export default {
@@ -91,11 +88,13 @@ export default {
 	},
 
 	encryptJSONObject() {
-		//await this.fetchPublicKey();
-		//console.log("Public key was fetched:");
-		this.fields.publicKey = PUBLIC_KEY;
 		var crypt = new JSEncrypt();
-		crypt.setPublicKey(this.fields.publicKey);
+		crypt.setPublicKey(`-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1bUc5gOWksXtUESHKNyFaaJXs
+MZmHoZNLhXxE/2A+GGWc/16ECDvrcGyajgukc0iB22oXFisKhYZd86MKevr4F9EH
+kcgOMlXn9C4c7GaDbF0ydaeplTEeN9mG6ANy5+b8Ok4HZaVJdrkYR5yrQMZaXyIe
+GTdL1HmiWVEt3kXcHwIDAQAB
+-----END PUBLIC KEY-----`);
 		const encString = this.createRandomString(32);
 		/*
 		var utf8Encode = new TextEncoder();
@@ -140,24 +139,15 @@ export default {
 		});
 		return result;
 	},
-
-	async fetchPublicKey(){
-		try {
-			const response = await fetch('http://localhost:4567/returnpublickey');
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			const data = response;
-			this.fields.publicKey = data;
-		} catch (error) {
-			console.log(`Error: ${error}`);
-			throw error;
-		}
-	},
-
+	/**
+	 * @function
+	 * @name registerUser 
+	 * Sends a POST request to the back-end to register a user.
+	 * @returns {object} Confirmation or Error object from backend. 
+	 */
 	async loginUsername(){
 		try {
-			const response = await fetch(LOCALHOST_URI + '/login',
+			const response = await fetch(URI + '/login',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -177,7 +167,7 @@ export default {
 
 	async loginEmail(){
 		try {
-			const response = await fetch(HEROKU_URI + '/login',
+			const response = await fetch(URI + '/login',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -221,7 +211,7 @@ export default {
 	},
 	async registerUser() {
 		try {
-			const response = await fetch(LOCALHOST_URI + '/register',
+			const response = await fetch(URI + '/register',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -242,7 +232,7 @@ export default {
 	},
 	async listApplicants() {
 		try {
-			const response = await fetch(HEROKU_URI + '/applicants',
+			const response = await fetch(URI + '/applicants',
 				{
 					method: 'GET',
 					headers: { 'Content-Type': 'application/json' },
