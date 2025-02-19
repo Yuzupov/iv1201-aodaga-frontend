@@ -111,9 +111,6 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 
 		});
 		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, CryptoJS.enc.Hex.parse(AESKeyHex), { iv: iv });
-
-		console.log(AESKeyHex);
-		console.log(CryptoJS.enc.Hex.parse(AESKeyHex));
 		const AESKeyB64 = CryptoJS.enc.Hex.parse(AESKeyHex).toString(CryptoJS.enc.Base64);
 		const cryptedKey = cryptSHA.encrypt(AESKeyB64);
 
