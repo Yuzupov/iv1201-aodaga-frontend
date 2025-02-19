@@ -7,7 +7,6 @@ if (window.location.hostname === "localhost"){
 	URI = 'http://localhost:4567';
 }
 
-var iv = CryptoJS.enc.Hex.parse("101112131415161718191a1b1c1d1e1f");
 
 export default {
 	fields: {
@@ -88,14 +87,15 @@ export default {
 	},
 
 	encryptJSONObject() {
-		var crypt = new JSEncrypt();
-		crypt.setPublicKey(`-----BEGIN PUBLIC KEY-----
+		var cryptSHA = new JSEncrypt();
+		cryptSHA.setPublicKey(`-----BEGIN PUBLIC KEY-----
 MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1bUc5gOWksXtUESHKNyFaaJXs
 MZmHoZNLhXxE/2A+GGWc/16ECDvrcGyajgukc0iB22oXFisKhYZd86MKevr4F9EH
 kcgOMlXn9C4c7GaDbF0ydaeplTEeN9mG6ANy5+b8Ok4HZaVJdrkYR5yrQMZaXyIe
 GTdL1HmiWVEt3kXcHwIDAQAB
 -----END PUBLIC KEY-----`);
-		const encString = this.createRandomString(32);
+		const AESKeyHex = this.createRandomString(64);
+		const iv = CryptoJS.enc.Hex.parse(this.createRandomString(32));
 		/*
 		var utf8Encode = new TextEncoder();
 		const bytes = utf8Encode.encode(encString);
@@ -110,11 +110,15 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 			confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
 
 		});
-		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, CryptoJS.enc.Hex.parse(encString), { iv: iv });
-		const cryptedKey = crypt.encrypt(encString);
-	
+		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, CryptoJS.enc.Hex.parse(AESKeyHex), { iv: iv });
+
+		console.log(AESKeyHex);
+		console.log(CryptoJS.enc.Hex.parse(AESKeyHex));
+		const AESKeyB64 = CryptoJS.enc.Hex.parse(AESKeyHex).toString(CryptoJS.enc.Base64);
+		const cryptedKey = cryptSHA.encrypt(AESKeyB64);
+
 		this.fields.JSONCipherObject.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
- 		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString();
+ 		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString(CryptoJS.enc.Base64);
  		this.fields.JSONCipherObject.key = cryptedKey; 
 
 	},
