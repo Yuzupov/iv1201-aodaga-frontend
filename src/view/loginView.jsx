@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import LoginPresenter from "../presenter/loginPresenter";
+import AuthLayout from "../components/authLayout";
+import FormLayout from "../components/formLayout";
 /**
  * @constant
  * @name LoginView
@@ -45,11 +47,9 @@ const LoginView = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-linear-65 from-purple-800 to-red-400">
-    <div className="w-full max-w-md px-8 py-12 bg-gray-900 shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {message && <p className="text-red-500">{message}</p>} {/* Display success/error message */}
-
+    <AuthLayout title="Login">
+    <FormLayout>
+      {message && <p className="text-red-500">{message}</p>} 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
           { label: "Username or Email", name: "username", type: "text" },
@@ -74,8 +74,8 @@ const LoginView = () => {
           Login 
         </button>
       </form>
-    </div>
-    </div>
+    </FormLayout>
+    </AuthLayout>
   );
 };
 
