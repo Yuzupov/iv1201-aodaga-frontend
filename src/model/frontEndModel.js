@@ -64,7 +64,7 @@ export default {
 
 	/**
 	 * @function
-	 * @name encryptRegisterUser
+	 * @name encryptJSONObject
 	 * Encrypts the user data in the model
 	 * @returns nothing
 	 */
@@ -90,7 +90,7 @@ export default {
  		this.fields.JSONCipherObject.key = cryptedKey; 
 	},
 
-	async encryptRegisterUser() {
+	async encryptJSONObject() {
 		//await this.fetchPublicKey();
 		//console.log("Public key was fetched:");
 		this.fields.publicKey = PUBLIC_KEY;
@@ -128,7 +128,7 @@ export default {
 	 */
 	setAndEncryptUserData(props) {
 		this.setField(props);
-		this.encryptRegisterUser();
+		this.encryptJSONObject();
 	},
 	createRandomString(length) {
 		const chars = "0123456789abcdef"
