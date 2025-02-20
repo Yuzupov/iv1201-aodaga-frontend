@@ -17,12 +17,13 @@ const LoginPresenter = {
     try {
       const response = await frontEndModel.login(formData);
       //const isEmail = formData.username.includes("@");
-      if (!response || !response.userPassword || !response.username || !response.email) {
+      /*if (!response || !response.userPassword || !response.username )
+	    {
         throw new Error("User not found");
       }
        if (formData.userPassword !== response.userPassword || formData.username !== response.username && formData.username !== response.email) {
          throw new Error("Invalid credentials");
-       }
+       }*/
       // if (formData.userPassword !== response.userPassword || formData.username !== response.username) {
       //   throw new Error("Invalid credentials");
       // }
