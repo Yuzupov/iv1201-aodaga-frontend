@@ -68,7 +68,7 @@ export default {
 	 * Encrypts the user data in the model
 	 * @returns nothing
 	 */
-	async encryptLoginUsername(){
+	encryptLoginUsername(){
 		this.fields.publicKey = PUBLIC_KEY;
 		var crypt = new JSEncrypt();
 		crypt.setPublicKey(this.fields.publicKey);
@@ -90,7 +90,7 @@ export default {
  		this.fields.JSONCipherObject.key = cryptedKey; 
 	},
 
-	async encryptJSONObject() {
+	encryptJSONObject() {
 		//await this.fetchPublicKey();
 		//console.log("Public key was fetched:");
 		this.fields.publicKey = PUBLIC_KEY;
