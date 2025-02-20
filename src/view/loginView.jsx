@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import LoginPresenter from "../presenter/loginPresenter";
-import AuthLayout from "../components/authLayout";
-import FormLayout from "../components/formLayout";
+import AuthLayout from "../layouts/authLayout";
+import FormLayout from "../layouts/formLayout";
+import { useNavigate } from "react-router-dom"; // NEW NEW NEW
 /**
  * @constant
  * @name LoginView
@@ -15,6 +16,7 @@ const LoginView = () => {
   });
 
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // NEW NEW NEW
   /**
    * @function
    * @name handleChange
@@ -36,12 +38,28 @@ const LoginView = () => {
    * @param {event object} e
    * @returns nothing 
    */
-  const handleSubmit = (e) => {
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   LoginPresenter.submitLogin(
+  //     formData,
+  //     (data) => setMessage(`Login successful! Welcome, ${data.userName}`),
+  //     (error) => setMessage(`Error: ${error}`)
+  //   );
+  // };
+
+  const handleSubmit = (e) => { // NEW NEW NEW 
     e.preventDefault();
 
     LoginPresenter.submitLogin(
       formData,
-      (data) => setMessage(`Login successful! Welcome, ${data.userName}`),
+      (data) => {
+        setMessage(`Login successful! Welcome, ${data.username}`);
+        localStorage.setItem("isLoggedIn", "true"); 
+        localStorage.setItem("username", data.username); 
+        setTimeout(() => navigate("/dashboard"), 1000); 
+      },
       (error) => setMessage(`Error: ${error}`)
     );
   };

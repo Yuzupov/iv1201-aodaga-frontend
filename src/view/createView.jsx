@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CreatePresenter from "../presenter/createPresenter";
-import AuthLayout from "../components/authLayout";
-import FormLayout from "../components/formLayout";
+import AuthLayout from "../layouts/authLayout";
+import FormLayout from "../layouts/formLayout";
 /**
  * @constant
  * @name CreateView
