@@ -22,10 +22,15 @@ export default {
 			cipher: "",
 			iv: "",
 			key: "",
+			epoch: "",
 		},
 		confirmationMessage: "",
 		publicKey: "",
 	},
+/**
+ * Following section includes state modifying methods for the model
+ */
+
 	/**
 	 * @function 
 	 * @name setField
@@ -34,102 +39,17 @@ export default {
 	 * @returns nothing
 	 */
 	setField(props) {
-		for (var data in props) {
+		for (let data in props) {
 			this.fields.userCredentials[data] = props[data];
 		}
 	},
+
 	unSetUserCredentials(){
-		for(var credential in this.fields.userCredentials){
+		for(let credential in this.fields.userCredentials){
 			credential = "";
 		}
 	},
-	parseData(props){
-		var listOfApplicants = [];
-		var parsedProps = JSON.parse(props);
-		listOfApplicants = parsedProps.applicants;
-		/*
-		var i = 0;
-		for(var applicantData in parsedProps.data.listOfApplicants){
-			listOfApplicants[i] = applicantData;
-			i++;
-		}
-		*/
-		return listOfApplicants;
-	},
 
-
-	/**
-	 * @function
-	 * @name encryptJSONObject
-	 * Encrypts the user data in the model
-	 * @returns nothing
-	 */
-	encryptLoginUsername(){
-		this.fields.publicKey = PUBLIC_KEY;
-		var crypt = new JSEncrypt();
-		crypt.setPublicKey(this.fields.publicKey);
-		const encString = this.createRandomString(32);
-		/*
-		var utf8Encode = new TextEncoder();
-		const bytes = utf8Encode.encode(encString);
-		*/
-		const plainJSON = JSON.stringify({
-			username: this.fields.userCredentials.username,
-			userPassword: this.fields.userCredentials.userPassword,
-
-		});
-		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, CryptoJS.enc.Hex.parse(encString), { iv: iv });
-		const cryptedKey = crypt.encrypt(encString);
-	
-		this.fields.JSONCipherObject.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
- 		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString();
- 		this.fields.JSONCipherObject.key = cryptedKey; 
-	},
-
-	encryptJSONObject() {
-		var cryptSHA = new JSEncrypt();
-		cryptSHA.setPublicKey(`-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC1bUc5gOWksXtUESHKNyFaaJXs
-MZmHoZNLhXxE/2A+GGWc/16ECDvrcGyajgukc0iB22oXFisKhYZd86MKevr4F9EH
-kcgOMlXn9C4c7GaDbF0ydaeplTEeN9mG6ANy5+b8Ok4HZaVJdrkYR5yrQMZaXyIe
-GTdL1HmiWVEt3kXcHwIDAQAB
------END PUBLIC KEY-----`);
-		const AESKeyHex = this.createRandomString(64);
-		const iv = CryptoJS.enc.Hex.parse(this.createRandomString(32));
-		/*
-		var utf8Encode = new TextEncoder();
-		const bytes = utf8Encode.encode(encString);
-		*/
-		const plainJSON = JSON.stringify({
-			firstName: this.fields.userCredentials.firstName,
-			lastName: this.fields.userCredentials.lastName,
-			email: this.fields.userCredentials.email,
-			personalNumber: this.fields.userCredentials.personalNumber,
-			username: this.fields.userCredentials.username,
-			userPassword: this.fields.userCredentials.userPassword,
-			confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
-
-		});
-		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, CryptoJS.enc.Hex.parse(AESKeyHex), { iv: iv });
-		const AESKeyB64 = CryptoJS.enc.Hex.parse(AESKeyHex).toString(CryptoJS.enc.Base64);
-		const cryptedKey = cryptSHA.encrypt(AESKeyB64);
-
-		this.fields.JSONCipherObject.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
- 		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString(CryptoJS.enc.Base64);
- 		this.fields.JSONCipherObject.key = cryptedKey; 
-
-	},
-	/**
-	 * @function
-	 * @name setAndEncryptUserData
-	 * @param {object} props 
-	 * Sets and encrypts the user data.
-	 * @returns nothing
-	 */
-	setAndEncryptUserData(props) {
-		this.setField(props);
-		this.encryptJSONObject();
-	},
 	createRandomString(length) {
 		const chars = "0123456789abcdef"
 		let result = "";
@@ -140,77 +60,139 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 		});
 		return result;
 	},
-	/**
-	 * @function
-	 * @name registerUser 
-	 * Sends a POST request to the back-end to register a user.
-	 * @returns {object} Confirmation or Error object from backend. 
-	 */
-	async loginUsername(){
-		try {
-			const response = await fetch(URI + '/login',
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(this.fields.JSONCipherObject)
-					
-				}
-			);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			return response.json();
-		} catch (error) {
-			console.log(`error: ${error}`);
-			throw error;
+
+	parseList(jsonObject){
+		let list = [];
+		let i = 0;
+		for(let applicant in jsonObject.applicants){
+			list[i] = applicant;
+			i++;
 		}
+		return list;
 	},
 
-	async loginEmail(){
-		try {
-			const response = await fetch(URI + '/login',
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(this.fields.JSONCipherObject)
-					
-				}
-			);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			return response.json();
-		} catch (error) {
-			console.log(`error: ${error}`);
-			throw error;
-		}
+	/**
+	 * @function
+	 * @name encryptJSONObject
+	 * Encrypts the user data in the model
+	 * @returns nothing
+	 */
 
+	encryptJSONObject(jsonObject) {
+		let cryptRSA = new JSEncrypt();
+
+		cryptRSA.setPublicKey(import.meta.env.VITE_PUBLIC_KEY);
+		const AESKeyHex = this.createRandomString(64);
+		const iv = CryptoJS.enc.Hex.parse(this.createRandomString(32));
+
+		const cipherJSON = CryptoJS.AES.encrypt(JSON.stringify(jsonObject), CryptoJS.enc.Hex.parse(AESKeyHex), { iv: iv });
+		const AESKeyB64 = CryptoJS.enc.Hex.parse(AESKeyHex).toString(CryptoJS.enc.Base64);
+		const cryptedKey = cryptRSA.encrypt(AESKeyB64);
+
+		let encryptedJson = {}
+		encryptedJson.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
+ 		encryptedJson.iv = cipherJSON.iv.toString(CryptoJS.enc.Base64);
+ 		encryptedJson.key = cryptedKey;
+
+		return {aeskey: AESKeyHex, json: encryptedJson};
 	},
 
 	createCookie(data){
 		const expirationDate = "expires="+ new Date(data.expirationDate*1000);
 		const cookieName = "loginCookie";
 		document.cookie = cookieName + "=" + data.token + ";" + expirationDate + ";";
+	},
 
+	decryptResponse(response, symmetricKey, epoch){
+		let cryptRSA = new JSEncrypt();
+		
+		const signatureAES = CryptoJS.enc.Base64.parse(response.signature);
+		const signatureRSA = CryptoJS.AES.decrypt(signatureAES, CryptoJS.enc.Hex.parse(symmetricKey), {iv: CryptoJS.enc.Base64.parse(response.iv)})
+		const signatureRSAB64 = signatureRSA.toString(CryptoJS.enc.Base64);
+		
+		cryptRSA.setPublicKey(import.meta.env.VITE_PUBLIC_KEY);
+		const decryptedSignature = cryptRSA.decrypt(signatureRSAB64);
+
+
+		console.log(typeof(epoch));
+		console.log(epoch);
+		console.log(typeof(decryptedSignature));
+		console.log(decryptedSignature);
+
+		if(!decryptedSignature === epoch){
+			throw new Error;
+		}
+		if(response.cipherText){
+			//const hexIv = Buffer.from(response.iv, 'base64');
+			//const iv = hexIv.toString('hex');
+		  const plainText= CryptoJS.AES.decrypt(response.signature, CryptoJS.enc.Hex.parse(symmetricKey), { iv: CryptoJS.enc.Base64.parse(response.iv) })
+			return {signature: decryptedSignature, plainText: plainText};
+		}
+		return {signature: decryptedSignature};
+	},
+
+	/**
+	 * Following section includes methods that are used by the presenter layer for making API requests.
+	 */
+	
+	async createAccount(props){
+		try {
+		const epoch = Date.now();
+		console.log(typeof(epoch));
+		console.log(epoch);
+		this.setField(props);
+		const crypt = this.encryptJSONObject(props);
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.epoch = epoch;
+		const response = await this.registerUser();
+		const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+		console.log(decryptedResponse.plainText);
+		return decryptedResponse.plainText;
+		} catch (error) {
+			console.error('Incorrect signature');
+			throw error;
+		}
 	},
 
 	async login(props) {
+		const epoch = Date.now();
 		this.setField(props);
-		this.encryptLoginUsername();
-		if(props.username){
-			const data = await this.loginUsername();
+		const crypt = this.encryptJSONObject(props);
+		this.fields.JSONCipherObject = crypt.json;
+
+		try {
+			const data = await this.loginUser(epoch);
 			this.createCookie(data);
 			return data;
-		} else if(props.email){
-			const data = await this.loginEmail();
-			this.createCookie(data);
-			return data;
-		}
-		else {
+		} catch {
 			throw new Error;
 		}
 	},
-	async registerUser() {
+	
+	async listApplicants(){
+		try{
+			const epoch = Date.now();
+			const response = await this.fetchApplicantList()
+			list = parseList(response);
+			return list;
+		} catch {
+			throw new Error;
+		}
+	},
+
+	/**
+	 * Following section contains methods that does the actual requests to the back-end APIs
+	 */
+
+
+	/**
+	 * @function
+	 * @name registerUser 
+	 * Sends a POST request to the back-end to register a user.
+	 * @returns {object} Confirmation or Error object from backend. 
+	 */
+
+	async registerUser(epoch) {
 		try {
 			const response = await fetch(URI + '/register',
 				{
@@ -222,33 +204,46 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			const data = response;
-			console.log(`Returned:`);
-			console.log(data);
-			return data;
+			return response;
 		} catch (error) {
 			console.error(`Error when registering: ${error}`);
 			throw error;
 		}
 	},
-	async listApplicants() {
+
+	async loginUser(epoch){
 		try {
-			const response = await fetch(URI + '/applicants',
+			const response = await fetch(URI + '/login',
 				{
-					method: 'GET',
+					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					//maybe some auth here?
+					body: JSON.stringify(this.fields.JSONCipherObject),
+					
 				}
 			);
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			const data = response;
-			console.log(data);
-			const parsedData = this.parseData(response);
-			console.log(parsedData);
-			return parsedData;
+			return response.json();
+		} catch (error) {
+			console.log(`error: ${error}`);
+			throw error;
+		}
+	},
 
+	async fetchApplicantList(epoch) {
+		try {
+			const response = await fetch(URI + '/applicants',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
 		} catch (error) {
 			console.error(`Error when requesting applicants: ${error}`);	
 			throw error;

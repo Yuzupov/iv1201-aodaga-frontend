@@ -24,8 +24,8 @@ const CreatePresenter = {
       if (!pnrRegex.test(formData.personalNumber)) {
         throw new Error("Invalid personalnumber format")
       }
-      frontEndModel.setAndEncryptUserData(formData);
-      const response = await frontEndModel.registerUser();
+      const response = await frontEndModel.createAccount(formData);
+      //const response = await frontEndModel.registerUser();
       onSuccess(response);
     } catch (error) {
       console.error("Error in CreatePresenter:", error);
