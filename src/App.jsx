@@ -32,20 +32,5 @@ const App = () => {
   </Router>
   );
 };
-/*
-const App = () => {
-  return(
-  <Router>
-    <Routes>
-      <Route path="/start" element={<StartView />} /> 
-      <Route path="/create-account" element={ <CreateView /> } />
-      <Route path="/login" element={<LoginView />} /> 
-      <Route path="/dashboard" element={<DashboardView /> }/>
-      <Route/>
-    </Routes>
-  </Router>
 
-)};
-
-*/
 export default App;
