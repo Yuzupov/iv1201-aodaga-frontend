@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import CreatePresenter from "../presenter/createPresenter";
+import AuthLayout from "../layouts/authLayout";
+import FormLayout from "../layouts/formLayout";
 /**
  * @constant
  * @name CreateView
@@ -50,9 +52,8 @@ const CreateView = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-linear-65 from-purple-800 to-red-400">
-      <div className="w-full max-w-md px-8 py-12 bg-gray-900 shadow-lg rounded-lg">
-        <h1 className="text-4xl font-bold mb-6 text-center">Create an Account</h1>
+    <AuthLayout title="Create an Account" className="text-center">
+      <FormLayout>
         <p className="text-sm mb-8 text-center">
           Already have an account?{" "}
           <a href="/login" className="text-purple-400 hover:underline">
@@ -138,8 +139,8 @@ const CreateView = () => {
             Create Account
           </button>
         </form>
-      </div>
-    </div>
+      </FormLayout>
+    </AuthLayout>
   );
 };
 

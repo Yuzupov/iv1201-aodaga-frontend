@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import LoginPresenter from "../presenter/loginPresenter";
+import AuthLayout from "../layouts/authLayout";
+import FormLayout from "../layouts/formLayout";
+import { useNavigate } from "react-router-dom"; // NEW NEW NEW
 /**
  * @constant
  * @name LoginView
@@ -13,6 +16,7 @@ const LoginView = () => {
   });
 
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // NEW NEW NEW
   /**
    * @function
    * @name handleChange
@@ -34,22 +38,36 @@ const LoginView = () => {
    * @param {event object} e
    * @returns nothing 
    */
-  const handleSubmit = (e) => {
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   LoginPresenter.submitLogin(
+  //     formData,
+  //     (data) => setMessage(`Login successful! Welcome, ${data.userName}`),
+  //     (error) => setMessage(`Error: ${error}`)
+  //   );
+  // };
+
+  const handleSubmit = (e) => { // NEW NEW NEW 
     e.preventDefault();
 
     LoginPresenter.submitLogin(
       formData,
-      (data) => setMessage(`Login successful! Welcome, ${data.userName}`),
+      (data) => {
+        setMessage(`Login successful! Welcome, ${data.username}`);
+        localStorage.setItem("isLoggedIn", "true"); 
+        localStorage.setItem("username", data.username); 
+        setTimeout(() => navigate("/dashboard"), 1000); 
+      },
       (error) => setMessage(`Error: ${error}`)
     );
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-linear-65 from-purple-800 to-red-400">
-    <div className="w-full max-w-md px-8 py-12 bg-gray-900 shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {message && <p className="text-red-500">{message}</p>} {/* Display success/error message */}
-
+    <AuthLayout title="Login">
+    <FormLayout>
+      {message && <p className="text-red-500">{message}</p>} 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
           { label: "Username or Email", name: "username", type: "text" },
@@ -74,8 +92,8 @@ const LoginView = () => {
           Login 
         </button>
       </form>
-    </div>
-    </div>
+    </FormLayout>
+    </AuthLayout>
   );
 };
 
