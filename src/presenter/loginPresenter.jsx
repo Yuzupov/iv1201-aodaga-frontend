@@ -15,12 +15,12 @@ const LoginPresenter = {
    */
   submitLogin: async (formData, onSuccess, onError) => {
     try {
-      const response = await frontEndModel.login(formData);
-
-      if(username.includes("@")){
+      if(formData.username.indexOf("@") != -1){
         formData.email = formData.username;
         formData.username = "";
       }
+      
+      const response = await frontEndModel.login(formData);
     
       if (!response || !response.userPassword || !response.username )
 	    {
@@ -32,7 +32,7 @@ const LoginPresenter = {
       // if (formData.userPassword !== response.userPassword || formData.username !== response.username) {
       //   throw new Error("Invalid credentials");
       // }
-      // if (isEmail) {
+      // if (isEmail){
       //   if (formData.username !== response.email) {
       //     throw new Error("Incorrect email");
       //   }

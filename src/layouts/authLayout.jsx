@@ -9,7 +9,6 @@ const AuthLayout = ({ title, children }) => {
     document.body.style.width = "100vw";
   }, []);
 
-  
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-800 to-red-400">
       <div className=" text-white text-2xl font-bold w-full flex justify-center">
