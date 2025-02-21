@@ -7,27 +7,15 @@ import CreateView from "./view/createView";
 import StartView from "./view/startView";
 import DashboardView from "./view/dashboardView";
 
-// const ProtectedRoute = ({ children }) => {
-//   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-//   return isLoggedIn ? children : <Navigate to="/login" />;
-// };
+const ProtectedRoute = ({children}) => {
+	const userToken = document.cookie;
+	return userToken ? children : <Navigate to="/login" replace/>;
 
-const CookieRoute = () => {
-  if (!document.cookie) {
-    return <Navigate to ="/create-account" />;
-  }
-  else {
-    return <Navigate to ="/dashboard" />;
-  }
 }
+const IfTokenLogin = ({children}) => {
+	const userToken = document.cookie;
+	return !userToken ? children : <Navigate to="/dashboard" replace/>;
 
-const ProtectedRoute = () => {
-  if (document.cookie) {
-    return <Navigate to="/dashboard" />;
-  }
-  else {
-    return <Navigate to ="/login" />;
-  }
 }
 
 const App = () => {
@@ -35,40 +23,29 @@ const App = () => {
   return (
   <Router>
     <Routes>
-      <Route path="/start" element={<CookieRoute> <StartView /> </CookieRoute>} />
+      <Route path="/start" element={<StartView />} />
       <Route path="/create-account" element={ <CreateView /> } />
-      <Route path="/login" element={<LoginView />} /> 
-      <Route path="/dashboard" component={ProtectedRoute} element={ <DashboardView /> } />
+      <Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
+      <Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
       <Route/>
     </Routes>
   </Router>
   );
 };
 /*
-const ProtectedRoute = () => {
-  if (document.cookie) {
-    return <Navigate to="/dashboard" />;
-  }
-  else {
-    return <Navigate to ="/login" />;
-  }
-}
-
-const App = () => (
-  const[isAuth, setIsAuth] = useState(false);
-  
-  return
+const App = () => {
+  return(
   <Router>
     <Routes>
-    if(document.cookie){
-      <Route path="/start" element isAuth={} />
-}
+      <Route path="/start" element={<StartView />} /> 
       <Route path="/create-account" element={ <CreateView /> } />
       <Route path="/login" element={<LoginView />} /> 
-      <Route path="/dashboard" element={<ProtectedRoute> <DashboardView /> </ProtectedRoute>} />
+      <Route path="/dashboard" element={<DashboardView /> }/>
       <Route/>
     </Routes>
   </Router>
-);*/
 
+)};
+
+*/
 export default App;
