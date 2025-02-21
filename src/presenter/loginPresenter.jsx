@@ -21,14 +21,14 @@ const LoginPresenter = {
       }
       
       const response = await frontEndModel.login(formData);
-    
-      if (!response || !response.userPassword || !response.username )
-	    {
-        throw new Error("User not found");
-      }
-       if (formData.userPassword !== response.userPassword && formData.username !== response.username || formData.email !== response.email) {
-         throw new Error("Invalid credentials");
-       }
+   // 
+   //   if (!response || !response.userPassword || !response.username )
+   //         {
+   //     throw new Error("User not found");
+   //   }
+   //    if (formData.userPassword !== response.userPassword && formData.username !== response.username || formData.email !== response.email) {
+   //      throw new Error("Invalid credentials");
+   //    }
       // if (formData.userPassword !== response.userPassword || formData.username !== response.username) {
       //   throw new Error("Invalid credentials");
       // }
@@ -48,7 +48,8 @@ const LoginPresenter = {
       onSuccess(response); 
     } catch (error) {
       console.error("Error in LoginPresenter:", error.message);
-      onError(error.message);
+      //onError(error.message);
+      throw error;
     }
   },
 };
