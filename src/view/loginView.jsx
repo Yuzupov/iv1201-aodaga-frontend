@@ -16,7 +16,7 @@ const LoginView = () => {
   });
 
   const [message, setMessage] = useState("");
-//  const navigate = useNavigate(); // NEW NEW NEW
+  const navigate = useNavigate(); // NEW NEW NEW
   /**
    * @function
    * @name handleChange
@@ -39,30 +39,30 @@ const LoginView = () => {
    * @returns nothing 
    */
 
-   const handleSubmit = (e) => {
-     e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-     LoginPresenter.submitLogin(
-       formData,
-       () => setMessage(`Login successful! Welcome, user`),
-       (error) => setMessage(`Error: ${error}`)
-     );
-   };
+  //   LoginPresenter.submitLogin(
+  //     formData,
+  //     () => setMessage(`Login successful! Welcome, user`),
+  //     (error) => setMessage(`Error: ${error}`)
+  //   );
+  // };
 
- // const handleSubmit = (e) => { // NEW NEW NEW 
- //   e.preventDefault();
+  const handleSubmit = (e) => { // NEW NEW NEW 
+    e.preventDefault();
 
- //   LoginPresenter.submitLogin(
- //     formData,
- //     (data) => {
- //       setMessage(`Login successful! Welcome, ${data.username}`);
- //       localStorage.setItem("isLoggedIn", "true"); 
- //       localStorage.setItem("username", data.username); 
- //       setTimeout(() => navigate("/dashboard"), 1000); 
- //     },
- //     (error) => setMessage(`Error: ${error}`)
- //   );
- // };
+    LoginPresenter.submitLogin(
+      formData,
+      () => {
+        setMessage(`Login successful! Welcome, user`);
+        localStorage.setItem("isLoggedIn", "true"); 
+        localStorage.setItem("username", "user"); 
+        setTimeout(() => navigate("/dashboard"), 1000); 
+      },
+      (error) => setMessage(`Error: ${error}`)
+    );
+  };
 
   return (
     <AuthLayout title="Login">
