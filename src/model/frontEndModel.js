@@ -26,6 +26,7 @@ export default {
 		},
 		confirmationMessage: "",
 		publicKey: "",
+		role: "",
 	},
 /**
  * Following section includes state modifying methods for the model
