@@ -7,7 +7,6 @@ if (window.location.hostname === "localhost"){
 	URI = 'http://localhost:4567';
 }
 
-
 export default {
 	fields: {
 		userCredentials: {
@@ -28,9 +27,9 @@ export default {
 		publicKey: "",
 		role: "",
 	},
-/**
- * Following section includes state modifying methods for the model
- */
+	/**
+	 * Following section includes state modifying methods for the model
+	 */
 
 	/**
 	 * @function 
@@ -66,8 +65,7 @@ export default {
 		let list = [];
 		let i = 0;
 		for(let applicant in jsonObject.applicants){
-			list[i] = applicant;
-			i++;
+			list.push({ ...jsonObject.applicants[applicant] });
 		}
 		return list;
 	},
@@ -93,23 +91,17 @@ export default {
 
 		let encryptedJson = {}
 		encryptedJson.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
- 		encryptedJson.iv = cipherJSON.iv.toString(CryptoJS.enc.Base64);
- 		encryptedJson.key = cryptedKey;
+		encryptedJson.iv = cipherJSON.iv.toString(CryptoJS.enc.Base64);
+		encryptedJson.key = cryptedKey;
 
 		return {aeskey: AESKeyHex, json: encryptedJson};
-	},
-
-	createCookie(token, expirationTimestamp){
-		const expirationDate = "expires="+ new Date(expirationTimestamp*1000);
-		const cookieName = "loginCookie";
-		document.cookie = cookieName + "=" + token + ";" + expirationDate + ";";
 	},
 
 	decryptResponse(response, symmetricKey, epoch){
 
 		const signatureAES = CryptoJS.enc.Base64.parse(response.signature)
 		const signatureRSA = CryptoJS.AES.decrypt({ciphertext: signatureAES}, CryptoJS.enc.Hex.parse(symmetricKey), {iv: CryptoJS.enc.Base64.parse(response.signatureIv)})
-		
+
 		const signatureRSAB64 = signatureRSA.toString(CryptoJS.enc.Utf8);
 
 		let cryptRSA = new JSEncrypt();
@@ -128,9 +120,9 @@ export default {
 
 		if(response.cipher){
 
-		const responseAES = CryptoJS.enc.Base64.parse(response.cipher)
-		const decryptedResponseBytes = CryptoJS.AES.decrypt({ciphertext: responseAES}, CryptoJS.enc.Hex.parse(symmetricKey), {iv: CryptoJS.enc.Base64.parse(response.iv)})
-		const decryptedResponse = decryptedResponseBytes.toString(CryptoJS.enc.Utf8);
+			const responseAES = CryptoJS.enc.Base64.parse(response.cipher)
+			const decryptedResponseBytes = CryptoJS.AES.decrypt({ciphertext: responseAES}, CryptoJS.enc.Hex.parse(symmetricKey), {iv: CryptoJS.enc.Base64.parse(response.iv)})
+			const decryptedResponse = decryptedResponseBytes.toString(CryptoJS.enc.Utf8);
 
 			//const hexIv = Buffer.from(response.iv, 'base64');
 			//const iv = hexIv.toString('hex');
@@ -140,10 +132,31 @@ export default {
 		//return {signature: decryptedSignature};
 	},
 
+	createCookie(token, expirationTimestamp){
+		const expirationDate = "expires="+ new Date(expirationTimestamp*1000);
+		const cookieName = "loginCookie";
+		document.cookie = cookieName + "=" + token + ";" + expirationDate + ";";
+	},
+
+	getCookie(cname) {
+		let name = cname + "=";
+		let decodedCookie = decodeURIComponent(document.cookie);
+		let ca = decodedCookie.split(';');
+		for(let i = 0; i <ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	},
 	/**
 	 * Following section includes methods that are used by the presenter layer for making API requests.
 	 */
-	
+
 	async createAccount(props){
 		const epoch = Date.now().toString();
 		this.setField(props);
@@ -167,23 +180,31 @@ export default {
 		const crypt = this.encryptJSONObject(props);
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
-
 		try {
 			const response = await this.loginUser(epoch);
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			console.log(decryptedResponse);
 			this.createCookie(decryptedResponse.token, decryptedResponse.expirationDate);
-			//TODO RETURN OR SET ROLE, USERNAME ETCETERA
+			const token = this.getCookie("loginCookie");
+			console.log(token);
+			this.fields.role = decryptedResponse.role;
 		} catch {
 			throw new Error;
 		}
 	},
-	
+
 	async listApplicants(){
+			const epoch = Date.now().toString();
+			const authToken = this.getCookie("loginCookie");
+			console.log({ token: authToken });
+			const crypt = this.encryptJSONObject(props);
+			this.fields.JSONCipherObject = crypt.json;
+			this.fields.JSONCipherObject.timestamp = epoch;
 		try{
-			const epoch = Date.now();
-			const response = await this.fetchApplicantList()
-			list = parseList(response);
+			const response = await this.fetchApplicantList();
+			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+			console.log(decryptedResponse);
+			list = parseList(decryptedResponse);
 			return list;
 		} catch {
 			throw new Error;
@@ -228,7 +249,7 @@ export default {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(this.fields.JSONCipherObject),
-					
+
 				}
 			);
 			if (!response.ok) {
@@ -260,3 +281,4 @@ export default {
 		}
 	},
 };
+
