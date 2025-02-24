@@ -204,7 +204,8 @@ export default {
 			const response = await this.fetchApplicantList();
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			console.log(decryptedResponse);
-			list = parseList(decryptedResponse);
+			//list = parseList(decryptedResponse);
+			const list = decryptedResponse.applications;
 			return list;
 		} catch {
 			throw new Error;
