@@ -1,10 +1,16 @@
 # iv1201-aodaga
 the project repo for architecture and design of global applications
 
-# First Section: Installing
+# Installing
 Make a directory and clone this repository to get access to the source code. Navigate to the front-end directory and do the following:
 All the dependencies for the front-end part should be installed with 'npm install' and then run it with 'npm run dev'.
 The localhost server is currently served on 'http://localhost:5173/'
+
+# Deploying changes
+To deploy changes it is necessary to push it to the upstream at Heroku. This can be done by doing the following:
+Navigate to the directory that contains the front-end repository.
+Enter the following prompt:
+$ git push heroku main
 
 # Architectural Decisions
 ## Application
@@ -25,6 +31,11 @@ Java with Spark
 PostgreSQL
 
 # Misc
+## Build tools
+### Back-end
+Maven
+### Front-end
+Vite
 ## Hosting Service
 Heroku
 ## Documentation
