@@ -7,6 +7,21 @@ if (window.location.hostname === "localhost"){
 	URI = 'http://localhost:4567';
 }
 
+const jsonWithApplicants = {
+	applicants: [
+		{
+			name: "lmao",
+			email: "lmao@lmao.lmao",
+
+		},
+		{
+			name: "lmao2",
+			email: "lmao2@lmao.lmao",
+
+		}
+	]
+};
+
 export default {
 	fields: {
 		userCredentials: {
@@ -59,15 +74,6 @@ export default {
 			result += chars[number % chars.length];
 		});
 		return result;
-	},
-
-	parseList(jsonObject){
-		let list = [];
-		let i = 0;
-		for(let applicant in jsonObject.applicants){
-			list.push({ ...jsonObject.applicants[applicant] });
-		}
-		return list;
 	},
 
 	/**
@@ -205,7 +211,7 @@ export default {
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			console.log(decryptedResponse);
 			//list = parseList(decryptedResponse);
-			const list = decryptedResponse.applications;
+			var list = decryptedResponse.applicants;
 			return list;
 		} catch {
 			throw new Error;
