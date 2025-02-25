@@ -67,7 +67,7 @@ const LoginView = () => {
   return (
     <AuthLayout title="Login">
     <FormLayout>
-      {message && <p className="text-red-500">{message}</p>} 
+      {message && <p className="text-green-500">{message}</p>} 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
           { label: "Username or Email", name: "username", type: "text" },

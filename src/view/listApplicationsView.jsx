@@ -17,44 +17,70 @@ const ListApplicationsView = () => {
    * @returns nothing
    */
   useEffect(() => {
-    // Fetch applications on component mount
     ListApplicationsPresenter.fetchApplications(
-      (data) => setApplications(data), // Success callback
-      (errorMessage) => setError(errorMessage) // Error callback
+      (data) => setApplications(data),
+      (errorMessage) => setError(errorMessage)
     );
   }, []);
 
-  return (
-    <MenuLayout>
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Applications</h1>
-      {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
+  const handleStatusChange = (applicantId, newStatus) => {
+    ListApplicationsPresenter.updateApplicantStatus(
+      applicantId,
+      newStatus,
+      () => {
+        setApplications((prevApplications) =>
+          prevApplications.map((app) =>
+            app.id === applicantId ? { ...app, status: newStatus } : app
+          )
+        );
+      },
+      (errorMessage) => setError(errorMessage) 
+    );
+  };
 
-      {applications.length > 0 ? (
-        <table className="table-auto w-full border-collapse border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">Full Name</th>
-              <th className="border border-gray-300 px-4 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applications.map((app, index) => (
-              <tr key={index}>
-                <td className="border border-gray-300 px-4 py-2">
-                  {app.fullName}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {app.status}
-                </td>
+  return (
+    <MenuLayout title="Applicants">
+      <div className="container mx-auto p-4">
+        {error && <p className="text-red-500">{error}</p>}
+
+        {applications.length > 0 ? (
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr>
+                <th className="border border-gray-300 px-4 py-2">Name</th>
+                <th className="border border-gray-300 px-4 py-2">Surname</th>
+                <th className="border border-gray-300 px-4 py-2">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No applications available.</p>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {applications.map((app, index) => (
+                <tr key={index}>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {app.name}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {app.surname}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <select
+                      value={app.status}
+                      onChange={(e) =>
+                        handleStatusChange(app.id, e.target.value)
+                      }
+                      className="border border-gray-300 px-2 py-1"
+                    >
+                      <option value="Unhandled">Unhandled</option>
+                      <option value="Handled">Handled</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No applications available.</p>
+        )}
+      </div>
     </MenuLayout>
   );
 };
