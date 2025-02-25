@@ -6,6 +6,7 @@ import ListApplicationsView from "./view/listApplicationsView";
 import CreateView from "./view/createView";
 import StartView from "./view/startView";
 import DashboardView from "./view/dashboardView";
+import ResetView from "./view/resetView";
 
 const ProtectedRoute = ({children}) => {
 	const userToken = document.cookie;
@@ -25,6 +26,7 @@ const App = () => {
     <Routes>
       <Route path="/start" element={<StartView />} />
       <Route path="/create-account" element={ <CreateView /> } />
+      <Route path="/reset/*" element={ <ResetView/> } />
       <Route path="/list-applicants" element={ <ListApplicationsView /> } />
       <Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
       <Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />

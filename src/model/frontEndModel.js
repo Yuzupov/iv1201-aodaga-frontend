@@ -268,7 +268,6 @@ export default {
 	},
 
 	async fetchApplicantList() {
-		console.log("call in fetchApplicantList");
 		try {
 			const response = await fetch(URI + '/applicants',
 				{
@@ -285,6 +284,25 @@ export default {
 			console.error(`Error when requesting applicants: ${error}`);	
 			throw error;
 		}
+	},
+
+	async createPasswordResetLink(){
+		try {
+			const response = await fetch(URI + '/password-reset/create-link',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when requesting password link ${error}`);
+		}
+
 	},
 };
 
