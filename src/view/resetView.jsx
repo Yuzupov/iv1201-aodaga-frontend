@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import LoginPresenter from "../presenter/resetPresenter";
+import ResetPresenter from "../presenter/resetPresenter";
 import AuthLayout from "../layouts/authLayout";
 import FormLayout from "../layouts/formLayout";
 import { useNavigate } from "react-router-dom"; // NEW NEW NEW
@@ -9,12 +11,13 @@ import { useNavigate } from "react-router-dom"; // NEW NEW NEW
  * A view for the login section
  * @returns the view responsible for the login case
  */
-const LoginView = () => {
-  const [formData, setFormData] = useState({
+const ResetView = () => {
+  const [formData, setFormData, token] = useState({
     userPassword: "",
     confirmPassword: "",
+    token: useParams(),
   });
-
+  const isValid = localStorage.getItem("validResetLink");
   const [message, setMessage] = useState("");
   const navigate = useNavigate(); // NEW NEW NEW
   /**
@@ -39,39 +42,28 @@ const LoginView = () => {
    * @returns nothing 
    */
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   LoginPresenter.submitLogin(
-  //     formData,
-  //     () => setMessage(`Login successful! Welcome, user`),
-  //     (error) => setMessage(`Error: ${error}`)
-  //   );
-  // };
-
-  const handleSubmit = (e) => { // NEW NEW NEW 
+  const handleSubmit = (e) => { 
     e.preventDefault();
 
     LoginPresenter.submitLogin(
       formData,
       () => {
-        setMessage(`Login successful! Welcome, user`);
-        localStorage.setItem("isLoggedIn", "true"); 
-        localStorage.setItem("username", "user"); 
-        setTimeout(() => navigate("/dashboard"), 1000); 
+        setMessage(`Password reset successfully!`);
+        setTimeout(() => navigate("/login"), 1000); 
       },
       (error) => setMessage(`Error: ${error}`)
     );
   };
-
+if (isValid === false) return <p>Invalid or expired link. Redirecting...</p>;
+if (isValid === true) {
   return (
-    <AuthLayout title="Login">
+    <AuthLayout title="Reset Password">
     <FormLayout>
       {message && <p className="text-red-500">{message}</p>} 
       <form onSubmit={handleSubmit} className="space-y-4">
         {[
-          { label: "Username or Email", name: "username", type: "text" },
           { label: "Password", name: "userPassword", type: "password" },
+          { label: "Confirm Password", name: "confirmPassword", type: "password" },
         ].map((field) => (
           <div key={field.name} className="flex flex-col">
             <label htmlFor={field.name} className="text-lg font-medium">
@@ -89,12 +81,13 @@ const LoginView = () => {
           </div>
         ))}
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Login 
+         Reset Password 
         </button>
       </form>
     </FormLayout>
     </AuthLayout>
   );
 };
+}
 
-export default LoginView;
+export default ResetView;

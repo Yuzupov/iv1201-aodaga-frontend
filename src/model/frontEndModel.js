@@ -7,21 +7,6 @@ if (window.location.hostname === "localhost"){
 	URI = 'http://localhost:4567';
 }
 
-const jsonWithApplicants = {
-	applicants: [
-		{
-			name: "lmao",
-			email: "lmao@lmao.lmao",
-
-		},
-		{
-			name: "lmao2",
-			email: "lmao2@lmao.lmao",
-
-		}
-	]
-};
-
 export default {
 	fields: {
 		userCredentials: {
@@ -216,6 +201,54 @@ export default {
 		}
 	},
 
+	async resetPasswordLink(props){
+		const epoch = Date.now().toString();
+		console.log(props);
+		const crypt = this.encryptJSONObject(props);
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		try{
+			const response = await this.createPasswordResetLink();
+			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+			const validated = await this.validateLink(props);
+			if(validated.message === true){
+				return (true);
+			} else {
+				return false;
+			}
+		} catch (error){
+			console.error(error);
+		}
+
+	},
+
+	async validateLink(props){
+		const epoch = Date.now().toString();
+		const crypt = this.encryptJSONObject({ link: props.token });
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		try{
+			const validated = await this.validateResetLink();
+			const decryptedResponse = this.decryptResponse(validated, crypt.aeskey, epoch);
+			return ({ message: decryptedResponse });
+		} catch (error) {
+			console.error("Error when validating link");
+		}
+	},
+
+	async setNewPassword(props){
+		const epoch = Date.now().toString();
+		const crypt = this.encryptJSONObject({ password: props.password});
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		try{
+			const response = await sendAndSetNewPassword();
+			return response.json();
+		} catch (error) {
+			console.error("Failed resetting password");
+		}
+	},
+
 	/**
 	 * Following section contains methods that does the actual requests to the back-end APIs
 	 */
@@ -303,6 +336,42 @@ export default {
 			console.error(`Error when requesting password link ${error}`);
 		}
 
+	},
+
+	async validateResetLink(){
+		try {
+			const response = await fetch(URI + '/password-reset/validate-link',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when requesting password link ${error}`);
+		}
+	},
+
+	async sendAndSetNewPassword(){
+		try {
+			const response = await fetch(URI + '/password-reset',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when requesting password link ${error}`);
+		}
 	},
 };
 

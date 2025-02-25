@@ -6,7 +6,8 @@ import ListApplicationsView from "./view/listApplicationsView";
 import CreateView from "./view/createView";
 import StartView from "./view/startView";
 import DashboardView from "./view/dashboardView";
-import ResetView from "./view/resetView";
+import CreateResetLinkView from "./view/createResetLinkView";
+import ResetLinkView from "./view/resetView";
 
 const ProtectedRoute = ({children}) => {
 	const userToken = document.cookie;
@@ -16,7 +17,6 @@ const ProtectedRoute = ({children}) => {
 const IfTokenLogin = ({children}) => {
 	const userToken = document.cookie;
 	return !userToken ? children : <Navigate to="/dashboard" replace/>;
-
 }
 
 const App = () => {
@@ -26,7 +26,8 @@ const App = () => {
     <Routes>
       <Route path="/start" element={<StartView />} />
       <Route path="/create-account" element={ <CreateView /> } />
-      <Route path="/reset/*" element={ <ResetView/> } />
+      <Route path="/reset/create-link" element={ <CreateResetLinkView/> } />
+      <Route path="/reset/:token" element={ <ResetLinkView/> } />
       <Route path="/list-applicants" element={ <ListApplicationsView /> } />
       <Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
       <Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
