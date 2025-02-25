@@ -192,7 +192,6 @@ export default {
 			console.log(decryptedResponse);
 			this.createCookie(decryptedResponse.token, decryptedResponse.expirationDate);
 			const token = this.getCookie("loginCookie");
-			console.log(token);
 			this.fields.role = decryptedResponse.role;
 		} catch {
 			throw new Error;
@@ -201,16 +200,15 @@ export default {
 
 	async listApplicants(){
 			const epoch = Date.now().toString();
-			const authToken = this.getCookie("loginCookie");
-			console.log({ token: authToken });
-			const crypt = this.encryptJSONObject(props);
+			const authToken = {token: this.getCookie("loginCookie")};
+			const crypt = this.encryptJSONObject(authToken);
 			this.fields.JSONCipherObject = crypt.json;
 			this.fields.JSONCipherObject.timestamp = epoch;
 		try{
+			console.log("call in listapplicants");
 			const response = await this.fetchApplicantList();
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			console.log(decryptedResponse);
-			//list = parseList(decryptedResponse);
 			var list = decryptedResponse.applicants;
 			return list;
 		} catch {
@@ -269,7 +267,8 @@ export default {
 		}
 	},
 
-	async fetchApplicantList(epoch) {
+	async fetchApplicantList() {
+		console.log("call in fetchApplicantList");
 		try {
 			const response = await fetch(URI + '/applicants',
 				{

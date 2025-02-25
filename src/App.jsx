@@ -25,6 +25,7 @@ const App = () => {
     <Routes>
       <Route path="/start" element={<StartView />} />
       <Route path="/create-account" element={ <CreateView /> } />
+      <Route path="/list-applicants" element={ <ListApplicationsView /> } />
       <Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
       <Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
       <Route/>

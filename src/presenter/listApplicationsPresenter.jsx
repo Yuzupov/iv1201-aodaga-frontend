@@ -14,7 +14,8 @@ const ListApplicationsPresenter = {
    */
   fetchApplications: async (onSuccess, onError) => {
     try {
-      const applications = await frontEndModel.fetchApplications();
+	console.log("in listapplicationspresenter");
+      const applications = await frontEndModel.listApplicants();
       onSuccess(applications); // Pass data to the view
     } catch (error) {
       console.error("Error in ListApplicationsPresenter:", error.message);
