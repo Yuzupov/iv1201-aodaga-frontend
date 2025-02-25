@@ -15,7 +15,11 @@ const ProtectedRoute = ({children}) => {
 const IfTokenLogin = ({children}) => {
 	const userToken = document.cookie;
 	return !userToken ? children : <Navigate to="/dashboard" replace/>;
+}
 
+const Recruiter = ({children}) => { // maybe add this to the view for conditionald rendering. Show buttton if recruiter only 
+  const recruiterToken = 0; // add recruiter variable 
+  return !recruiterToken ? children : <Navigate to="/"/>;
 }
 
 const App = () => {
@@ -28,6 +32,7 @@ const App = () => {
       <Route path="/list-applicants" element={ <ListApplicationsView /> } />
       <Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
       <Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
+      <Route path="/applicants" element={<ListApplicationsView />} />
       <Route/>
     </Routes>
   </Router>

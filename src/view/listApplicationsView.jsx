@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ListApplicationsPresenter from "../presenter/listApplicationsPresenter";
+import MenuLayout from "../layouts/menuLayout";
 /**
  * @constant
  * @name ListApplicationsView
@@ -24,6 +25,7 @@ const ListApplicationsView = () => {
   }, []);
 
   return (
+    <MenuLayout>
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Applications</h1>
       {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
@@ -53,6 +55,7 @@ const ListApplicationsView = () => {
         <p>No applications available.</p>
       )}
     </div>
+    </MenuLayout>
   );
 };
 
