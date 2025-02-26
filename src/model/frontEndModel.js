@@ -231,6 +231,7 @@ export default {
 	},
 
 	async setNewPassword(props){
+		console.log(props);
 		const epoch = Date.now().toString();
 		const crypt = this.encryptJSONObject({
 			link: props.token.token,
