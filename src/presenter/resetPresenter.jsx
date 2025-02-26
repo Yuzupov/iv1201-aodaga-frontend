@@ -18,8 +18,8 @@ const ResetPresenter = {
 		try {
 			console.log("Trying to validate link");
 			const validateLink = await frontEndModel.validateLink(formData.token);
-			if(validateLink === true){
-				localStorage.setItem("isValid", "true");
+			if(validateLink.message.valid === true){
+				localStorage.setItem("isValid", true);
 			}
 			onSuccess();
 		} catch (error) {

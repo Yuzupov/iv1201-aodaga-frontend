@@ -41,10 +41,23 @@ const ResetView = () => {
    * @returns nothing 
    */
 
+  const handleSubmit = (e) => { // NEW NEW NEW 
+    e.preventDefault();
+
+    resetPresenter.submitPasswordForm(
+      formData,
+      () => {
+	      setMessage(`Password reset successfully!`);
+        setTimeout(() => navigate("/login"), 1000); 
+      },
+      (error) => setMessage(`Error: ${error}`)
+    );
+  };
+
   window.onload = () => { 
 	  ResetPresenter.validateLink(formData,
 		  () => {
-			  if (localStorage.getItem("isValid") === true) {
+			  if (localStorage.getItem("isValid") === "true") {
 				  return (
 					  <AuthLayout title="Reset Password">
 					  <FormLayout>
