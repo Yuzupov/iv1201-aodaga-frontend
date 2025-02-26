@@ -232,7 +232,10 @@ export default {
 
 	async setNewPassword(props){
 		const epoch = Date.now().toString();
-		const crypt = this.encryptJSONObject({ password: props.password});
+		const crypt = this.encryptJSONObject({
+			link: props.token,
+			password: props.password
+		});
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
 		try{
