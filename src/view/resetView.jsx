@@ -55,10 +55,10 @@ const ResetView = () => {
    * @returns nothing 
    */
 
-	const handleSubmit = (e) => { // NEW NEW NEW 
+  const handleSubmit = (e) => { // NEW NEW NEW 
 		e.preventDefault();
 
-		resetPresenter.submitPasswordForm(
+		ResetPresenter.resetPasswordForm(
 			formData,
 			() => {
 				setMessage(`Password reset successfully!`);
@@ -68,7 +68,7 @@ const ResetView = () => {
 		);
 	};
 
-	if(!isValid) return <p>Invalid or expired link</p>;
+  if(!isValid) return <p>Invalid or expired link</p>;
 	return (
 		<AuthLayout title="Reset Password">
 		<FormLayout>

@@ -3,9 +3,13 @@ const ResetPresenter = {
 
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
-			if(validateLink === true){
-				const resetConfirmation = await frontEndModel.setNewPassword(formData);
+			if (formData.userPassword !== formData.confirmUserPassword) {
+				throw new Error("Passwords do not match");
 			}
+			if (formData.userPassword <= 1) {
+				throw new Error("Password must be at least 2 character")
+			}
+			const resetConfirmation = await frontEndModel.setNewPassword(formData);
 
 			onSuccess(linkConfirmation); 
 		} catch (error) {
