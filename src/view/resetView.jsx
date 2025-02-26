@@ -64,7 +64,7 @@ const ResetView = () => {
 				setMessage(`Password reset successfully!`);
 				setTimeout(() => navigate("/login"), 1000); 
 			},
-			(error) => setMessage(`Error: ${error}`)
+			(error) => setMessage(`Reset password failed, please try again or contact an administrator`);
 		);
 	};
 

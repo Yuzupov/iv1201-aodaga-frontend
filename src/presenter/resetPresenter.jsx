@@ -1,6 +1,5 @@
 import frontEndModel from "../model/frontEndModel";
 const ResetPresenter = {
-
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
 			console.log(formData);
@@ -12,18 +11,16 @@ const ResetPresenter = {
 			}
 			const resetConfirmation = await frontEndModel.setNewPassword(formData);
 
-			onSuccess(resetConfirmation); 
+			onSuccess(); 
 		} catch (error) {
-			console.error("Error in ResetPresenter:", error.message);
-			//onError(error.message);
+			console.error("Error caught in ResetPresenter:", error.message);
 			throw error;
 		}
 	},
 	validateLink: async (formData, onSuccess, onError) => {
 		try {
-			console.log("Trying to validate link");
 			const validateLink = await frontEndModel.validateLink(formData.token);
-			if(validateLink.message.valid === "true"){
+			if(validateLink.message.valid === true){
 				localStorage.setItem("isValid", true);
 			}
 			onSuccess();
