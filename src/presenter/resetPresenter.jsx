@@ -3,6 +3,7 @@ const ResetPresenter = {
 
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
+			console.log(formData);
 			if (formData.userPassword !== formData.confirmUserPassword) {
 				throw new Error("Passwords do not match");
 			}
@@ -11,7 +12,7 @@ const ResetPresenter = {
 			}
 			const resetConfirmation = await frontEndModel.setNewPassword(formData);
 
-			onSuccess(linkConfirmation); 
+			onSuccess(resetConfirmation); 
 		} catch (error) {
 			console.error("Error in ResetPresenter:", error.message);
 			//onError(error.message);

@@ -11,9 +11,9 @@ import { useNavigate } from "react-router-dom"; // NEW NEW NEW
  * @returns the view responsible for the login case
  */
 const ResetView = () => {
-  const [formData, setFormData, token] = useState({
+  const [formData, setFormData] = useState({
     userPassword: "",
-    confirmPassword: "",
+    confirmUserPassword: "",
     token: useParams(),
   });
   const [isValid, setIsValid] = useState(false); 
@@ -69,6 +69,8 @@ const ResetView = () => {
 	};
 
   if(!isValid) return <p>Invalid or expired link</p>;
+
+	console.log("Rendering form: ", { formData });
 	return (
 		<AuthLayout title="Reset Password">
 		<FormLayout>
@@ -76,7 +78,7 @@ const ResetView = () => {
 		<form onSubmit={handleSubmit} className="space-y-4">
 		{[
 			{ label: "Password", name: "userPassword", type: "password" },
-			{ label: "Confirm Password", name: "confirmPassword", type: "password" },
+			{ label: "Confirm Password", name: "confirmUserPassword", type: "password" },
 		].map((field) => (
 			<div key={field.name} className="flex flex-col">
 			<label htmlFor={field.name} className="text-lg font-medium">
