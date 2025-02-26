@@ -236,6 +236,7 @@ export default {
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
 		try{
+			console.log("We are in the function that calls for teh request");
 			const response = await sendAndSetNewPassword();
 			return response.json();
 		} catch (error) {
