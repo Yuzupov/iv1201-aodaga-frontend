@@ -230,7 +230,7 @@ export default {
 		}
 	},
 
-	async sendAndSetNewPassword(props){
+	async setNewPassword(props){
 		const epoch = Date.now().toString();
 		const crypt = this.encryptJSONObject({ password: props.password});
 		this.fields.JSONCipherObject = crypt.json;
