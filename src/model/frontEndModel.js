@@ -235,7 +235,7 @@ export default {
 		const epoch = Date.now().toString();
 		const crypt = this.encryptJSONObject({
 			link: props.token.token,
-			password: props.password
+			password: props.userPassword
 		});
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
