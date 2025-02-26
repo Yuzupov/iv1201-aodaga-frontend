@@ -210,12 +210,6 @@ export default {
 		try{
 			const response = await this.createPasswordResetLink();
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
-			const validated = await this.validateLink(props);
-			if(validated.message === true){
-				return (true);
-			} else {
-				return false;
-			}
 		} catch (error){
 			console.error(error);
 		}

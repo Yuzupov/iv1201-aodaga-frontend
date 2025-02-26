@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import LoginPresenter from "../presenter/resetPresenter";
 import ResetPresenter from "../presenter/resetPresenter";
 import AuthLayout from "../layouts/authLayout";
 import FormLayout from "../layouts/formLayout";
@@ -45,7 +44,7 @@ const ResetView = () => {
   const handleSubmit = (e) => { 
     e.preventDefault();
 
-    LoginPresenter.submitLogin(
+    ResetPresenter.resetPasswordForm(
       formData,
       () => {
         setMessage(`Password reset successfully!`);

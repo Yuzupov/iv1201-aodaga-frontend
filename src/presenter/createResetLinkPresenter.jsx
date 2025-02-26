@@ -16,12 +16,6 @@ const ResetPresenter= {
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
 			const linkConfirmation = await frontEndModel.resetPasswordLink(formData);
-			if(linkConfirmation === true){
-				localStorage.setItem("validResetLink", true);
-			} else {
-				localStorage.setItem("validResetLink", false);
-			}
-
 			onSuccess(); 
 		} catch (error) {
 			console.error("Error in ResetPresenter:", error.message);

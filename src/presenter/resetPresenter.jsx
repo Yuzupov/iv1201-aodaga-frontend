@@ -3,7 +3,10 @@ const ResetPresenter = {
 
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
-			const resetConfirmation = await frontEndModel.setNewPassword(formData);
+			const validateLink = await frontEndModel.validateLink(formData.token);
+			if(validateLink === true){
+				const resetConfirmation = await frontEndModel.setNewPassword(formData);
+			}
 
 			onSuccess(linkConfirmation); 
 		} catch (error) {
