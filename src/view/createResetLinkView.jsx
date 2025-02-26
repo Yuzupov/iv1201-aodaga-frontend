@@ -45,7 +45,6 @@ const ResetLinkView = () => {
 			formData,
 			() => {
 				setMessage(`Link to reset password has been sent to your email!`);
-			}
 	},
 		(error) => setMessage(`Error: ${error}`)
 );
