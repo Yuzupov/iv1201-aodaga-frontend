@@ -237,7 +237,7 @@ export default {
 		this.fields.JSONCipherObject.timestamp = epoch;
 		try{
 			console.log("We are in the function that calls for teh request");
-			const response = await sendAndSetNewPassword();
+			const response = await this.sendAndSetNewPassword();
 			return response.json();
 		} catch (error) {
 			console.error("Failed resetting password");
