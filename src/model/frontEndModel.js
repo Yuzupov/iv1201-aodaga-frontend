@@ -230,7 +230,7 @@ export default {
 		}
 	},
 
-	async setNewPassword(props){
+	async sendAndSetNewPassword(props){
 		const epoch = Date.now().toString();
 		const crypt = this.encryptJSONObject({ password: props.password});
 		this.fields.JSONCipherObject = crypt.json;
@@ -241,6 +241,7 @@ export default {
 			return response.json();
 		} catch (error) {
 			console.error("Failed resetting password");
+			throw error;
 		}
 	},
 
