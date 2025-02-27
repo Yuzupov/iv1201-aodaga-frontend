@@ -7,21 +7,6 @@ if (window.location.hostname === "localhost"){
 	URI = 'http://localhost:4567';
 }
 
-const jsonWithApplicants = {
-	applicants: [
-		{
-			name: "lmao",
-			email: "lmao@lmao.lmao",
-
-		},
-		{
-			name: "lmao2",
-			email: "lmao2@lmao.lmao",
-
-		}
-	]
-};
-
 export default {
 	fields: {
 		userCredentials: {
@@ -58,12 +43,25 @@ export default {
 			this.fields.userCredentials[data] = props[data];
 		}
 	},
-
+	/**
+	 * @function
+	 * @name unSetCredentials
+	 * Clears the model from any credentials.
+	 *
+	 */
 	unSetUserCredentials(){
 		for(let credential in this.fields.userCredentials){
 			credential = "";
 		}
 	},
+	/**
+	 * @function
+	 * @name createRandomString
+	 * @param {integer} length
+	 * Takes a length and generates a hex string of that length that is random.
+	 *
+	 *
+	 */
 
 	createRandomString(length) {
 		const chars = "0123456789abcdef"
@@ -79,8 +77,9 @@ export default {
 	/**
 	 * @function
 	 * @name encryptJSONObject
-	 * Encrypts the user data in the model
-	 * @returns nothing
+	 * @param {JSON}
+	 * Encrypts the argument passed to it, returns a json and a key used for decrypting the response
+	 * @returns {JSON}
 	 */
 
 	encryptJSONObject(jsonObject) {
@@ -102,6 +101,15 @@ export default {
 
 		return {aeskey: AESKeyHex, json: encryptedJson};
 	},
+
+	/**
+	 * @function
+	 * @name decryptResponse
+	 * @param {JSON}
+	 * Takes a JSON, decrypts and checks if the signature is valid, returns the decrypted object if true
+	 * @returns {JSON}
+	 *
+	 */
 
 	decryptResponse(response, symmetricKey, epoch){
 
@@ -137,12 +145,32 @@ export default {
 		}
 		//return {signature: decryptedSignature};
 	},
+	
+	/**
+	 * @function
+	 * @name createCookie
+	 * @param {string, string}
+	 * Takes a token value and a timestampt from the back-end and creates a cookie
+	 * @returns none
+	 *
+	 *
+	 */
 
 	createCookie(token, expirationTimestamp){
 		const expirationDate = "expires="+ new Date(expirationTimestamp*1000);
 		const cookieName = "loginCookie";
 		document.cookie = cookieName + "=" + token + ";" + expirationDate + ";";
 	},
+
+	/**
+	 * @function
+	 * @name getCookie
+	 * @param {string}
+	 * Takes a cookie name as an argument and finds if the cookie is stored in the browser.
+	 * @returns empty string if not found, otherwise the cookie value
+	 *
+	 *
+	 */
 
 	getCookie(cname) {
 		let name = cname + "=";
@@ -163,6 +191,14 @@ export default {
 	 * Following section includes methods that are used by the presenter layer for making API requests.
 	 */
 
+	/**
+	 * @function
+	 * @name createAccount
+	 * @param {props}
+	 * Creates an account 
+	 * @returns nothing
+	 */
+
 	async createAccount(props){
 		const epoch = Date.now().toString();
 		this.setField(props);
@@ -179,6 +215,14 @@ export default {
 			throw error;
 		}
 	},
+
+	/**
+	 * @function
+	 * @name login
+	 * @param {props}
+	 * Logs in a user
+	 * @returns nothing
+	 */
 
 	async login(props) {
 		const epoch = Date.now().toString();
@@ -198,6 +242,13 @@ export default {
 		}
 	},
 
+	/**
+	 * @function
+	 * @name listApplicants
+	 * Lists applicants from back-end
+	 * @returns list of JSON objects 
+	 */
+
 	async listApplicants(){
 			const epoch = Date.now().toString();
 			const authToken = {token: this.getCookie("loginCookie")};
@@ -213,6 +264,78 @@ export default {
 			return list;
 		} catch {
 			throw new Error;
+		}
+	},
+
+	/**
+	 * @function
+	 * @name resetPasswordLink
+	 * @params {props}
+	 * Requests the back-end to create a temporary reset-password link
+	 * @returns nothing
+	 */
+
+	async resetPasswordLink(props){
+		const epoch = Date.now().toString();
+		console.log(props);
+		const crypt = this.encryptJSONObject(props);
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		try{
+			const response = await this.createPasswordResetLink();
+			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+		} catch (error){
+			console.error(error);
+		}
+
+	},
+
+	/**
+	 * @function
+	 * @name validateLink
+	 * @params {props}
+	 * Checks if the link provided by the back-end is valid.
+	 * @returns {bool} 
+	 */
+
+	async validateLink(props){
+		const epoch = Date.now().toString();
+		const crypt = this.encryptJSONObject({ link: props.token });
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		try{
+			const validated = await this.validateResetLink();
+			const decryptedResponse = this.decryptResponse(validated, crypt.aeskey, epoch);
+			return ({ message: decryptedResponse });
+		} catch (error) {
+			console.error("Error when validating link");
+		}
+	},
+
+	/**
+	 * @function
+	 * @name setNewPassword
+	 * @params {props}
+	 * Sets the new password in the back-end
+	 * @returns nothing
+	 */
+
+	async setNewPassword(props){
+		console.log(props);
+		const epoch = Date.now().toString();
+		const crypt = this.encryptJSONObject({
+			link: props.token.token,
+			password: props.userPassword
+		});
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		try{
+			console.log("We are in the function that calls for teh request");
+			const response = await this.sendAndSetNewPassword();
+			return response();
+		} catch (error) {
+			console.error("Failed resetting password");
+			throw error;
 		}
 	},
 
@@ -268,7 +391,6 @@ export default {
 	},
 
 	async fetchApplicantList() {
-		console.log("call in fetchApplicantList");
 		try {
 			const response = await fetch(URI + '/applicants',
 				{
@@ -284,6 +406,61 @@ export default {
 		} catch (error) {
 			console.error(`Error when requesting applicants: ${error}`);	
 			throw error;
+		}
+	},
+
+	async createPasswordResetLink(){
+		try {
+			const response = await fetch(URI + '/password-reset/create-link',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when requesting password link ${error}`);
+		}
+
+	},
+
+	async validateResetLink(){
+		try {
+			const response = await fetch(URI + '/password-reset/validate-link',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when requesting password link ${error}`);
+		}
+	},
+
+	async sendAndSetNewPassword(){
+		try {
+			const response = await fetch(URI + '/password-reset',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when requesting password link ${error}`);
 		}
 	},
 };
