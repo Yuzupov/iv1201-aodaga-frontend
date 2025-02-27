@@ -29,6 +29,7 @@ const App = () => {
   return (
   <Router>
     <Routes>
+      <Route path="/" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
       <Route path="/start" element={<StartView />} />
       <Route path="/create-account" element={ <CreateView /> } />
       <Route path="/reset/create-link" element={ <CreateResetLinkView/> } />

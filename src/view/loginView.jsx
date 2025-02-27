@@ -70,7 +70,7 @@ const LoginView = () => {
       <FormLayout>
         <p className="text-sm mb-8 text-center">
           Don't have an account?{" "}
-          <a href="/login" className="text-purple-400 hover:underline">
+          <a href="/create-account" className="text-purple-400 hover:underline">
             Create an account
           </a>
         </p>
