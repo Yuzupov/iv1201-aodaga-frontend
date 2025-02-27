@@ -8,12 +8,12 @@ const DashboardPresenter = {
    */
   fetchUserRole: (onSuccess, onError) => {
     try {
-      const userRole = frontEndModel.fields.role; 
+      const userRole = frontEndModel.getCookie("loginCookie"); 
 
-      console.log("User role retrieved:", userRole);
+      console.log("User role retrieved:", userRole.userRole);
 
       // If no role is set, assume "candidate"
-      onSuccess(userRole || "candidate"); 
+      onSuccess(userRole.userRole || "candidate"); 
     } catch (error) {
       console.error("Error fetching user role in presenter:", error.message);
       onError(error.message);
