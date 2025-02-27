@@ -17,6 +17,8 @@ const ListApplicationsView = () => {
    * @returns nothing
    */
   useEffect(() => {
+    // Fetch applications on component mount
+    console.log("in view");
     ListApplicationsPresenter.fetchApplications(
       (data) => setApplications(data),
       (errorMessage) => setError(errorMessage)
