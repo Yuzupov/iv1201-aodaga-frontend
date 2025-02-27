@@ -3,11 +3,11 @@ import Header from "../components/header.jsx";
 import Footer from "../components/footer.jsx";
 
 const MenuLayout = ({ title, children }) => {
-  useEffect(() => {
-    window.scrollTo(10000, 35);
-    document.body.style.overflow = "hidden";
-    document.body.style.width = "100vw";
-  }, []);
+ // useEffect(() => {
+ //   window.scrollTo(10000, 35);
+ //   document.body.style.overflow = "hidden";
+ //   document.body.style.width = "100vw";
+ // }, []);
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-800 to-purple-400">
