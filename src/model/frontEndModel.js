@@ -251,8 +251,8 @@ export default {
 
 	async listApplicants(){
 		const epoch = Date.now().toString();
-		//TODO fix cookie
-		const authToken = {token: this.getCookie("loginCookie")};
+		const cookieValues = this.getCookie("loginCookie");
+		const authToken = {token: cookieValues.authToken};
 		const crypt = this.encryptJSONObject(authToken);
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
