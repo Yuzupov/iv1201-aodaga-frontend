@@ -71,8 +71,9 @@ const ListApplicationsView = () => {
                       }
                       className="border border-gray-300 px-2 py-1"
                     >
+                      <option value="Accepted">Accepted</option>
+                      <option value="Rejected">Rejected</option>
                       <option value="Unhandled">Unhandled</option>
-                      <option value="Handled">Handled</option>
                     </select>
                   </td>
                 </tr>
