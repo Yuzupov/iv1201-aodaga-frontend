@@ -156,10 +156,11 @@ export default {
 	 *
 	 */
 
-	createCookie(token, expirationTimestamp){
-		const expirationDate = "expires="+ new Date(expirationTimestamp*1000);
-		const cookieName = "loginCookie";
-		document.cookie = cookieName + "=" + token + ";" + expirationDate + ";";
+	createCookie(token, role, expirationTimestamp){
+		const expirationDate = new Date(expirationTimestamp*1000);
+		const storedValues = { authToken: token, userRole: role };
+		const cookieValue = encodeURIComponent(JSON.stringify(storedValues));
+		document.cookie = `loginCookie=${cookieValue}; expires=${expirationDate};`;
 	},
 
 	/**
@@ -172,17 +173,13 @@ export default {
 	 *
 	 */
 
-	getCookie(cname) {
-		let name = cname + "=";
-		let decodedCookie = decodeURIComponent(document.cookie);
-		let ca = decodedCookie.split(';');
-		for(let i = 0; i <ca.length; i++) {
-			let c = ca[i];
-			while (c.charAt(0) == ' ') {
-				c = c.substring(1);
-			}
-			if (c.indexOf(name) == 0) {
-				return c.substring(name.length, c.length);
+	getCookie(cname) { 
+		console.log("Hej");
+		const cookies = document.cookie.split("; ");
+		for (let cookie of cookies) {
+			let [key, value] = cookie.split("=");
+			if (key === cname) {
+				return JSON.parse(decodeURIComponent(value));
 			}
 		}
 		return "";
@@ -234,8 +231,11 @@ export default {
 			const response = await this.loginUser(epoch);
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			console.log(decryptedResponse);
-			this.createCookie(decryptedResponse.token, decryptedResponse.expirationDate);
-			const token = this.getCookie("loginCookie");
+			this.createCookie(decryptedResponse.token, decryptedResponse.role, decryptedResponse.expirationDate);
+			const testCookie = this.getCookie("loginCookie");
+			console.log(testCookie.userRole);
+			//const token = this.getCookie("loginCookie");
+
 			this.fields.role = decryptedResponse.role;
 		} catch {
 			throw new Error;
@@ -250,11 +250,12 @@ export default {
 	 */
 
 	async listApplicants(){
-			const epoch = Date.now().toString();
-			const authToken = {token: this.getCookie("loginCookie")};
-			const crypt = this.encryptJSONObject(authToken);
-			this.fields.JSONCipherObject = crypt.json;
-			this.fields.JSONCipherObject.timestamp = epoch;
+		const epoch = Date.now().toString();
+		//TODO fix cookie
+		const authToken = {token: this.getCookie("loginCookie")};
+		const crypt = this.encryptJSONObject(authToken);
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
 		try{
 			console.log("call in listapplicants");
 			const response = await this.fetchApplicantList();
