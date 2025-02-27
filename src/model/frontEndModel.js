@@ -190,6 +190,25 @@ export default {
 		}
 	},
 
+	async updateApplicant(props){
+		const epoch = Date.now().toString();
+		
+		this.setField(props);
+		const crypt = this.encryptJSONObject({password: props, token: /**TODO get token and put in json */});
+		this.fields.JSONCipherObject = crypt.json;
+		this.fields.JSONCipherObject.timestamp = epoch;
+		// what?
+		try {
+			const response = await this.updateApplicantPost(epoch);
+			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+			console.log(decryptedResponse);
+			//TODO RETURN 
+		} catch {
+			throw new Error;
+		}
+	},
+
+
 	/**
 	 * Following section contains methods that does the actual requests to the back-end APIs
 	 */
@@ -260,17 +279,23 @@ export default {
 		}
 	},
 
-	async updateApplicant(epoch){
+	async updateApplicantPost(epoch){
 		try{
-		const response = await fetch(URI + '/applicant/update',
-			{
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(this.fields.JSONCipherObject),
+			const response = await fetch(URI + '/applicant/update',
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(this.fields.JSONCipherObject),
+				}
+				
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			
-		);
-	}
-		
-	}
+			return response.json();
+		} catch (error) {
+			console.error(`Error when updating applicant: ${error}`);	
+			throw error;
+		}
+	},
 };
