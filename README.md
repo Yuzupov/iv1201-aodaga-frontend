@@ -43,7 +43,7 @@ Each view should be located in the /src/views directory.
 ### Communication with Back-end Endpoints
 When adding functionality to communicate with an endpoint, it needs to follow the following structure:
 Fetch API should be used when communicating to the back-end. When communicating with the back-end the method that contains the fetch function must be wrapped in another function. See below for an example:
-
+```
 async wrapperMockFunction(){
     const response = await this.mockFunction();
 }
@@ -63,6 +63,7 @@ async mockFunction(){
         console.error(\<endpoint-specific-error-handling\>);
     }
 }
+```
 
 This is to ensure that the presenter and view layer never directly communicates with the backend.
 
@@ -75,6 +76,7 @@ The application follows REST API. Therefore no client information is stored betw
 ### Encryption protocol
 Each request needs to be encrypted according to the implemented encryption protocol. The encryption method accepts JSON objects. The decryption method accepts the encrypted response object, the encryption object's AES key, as well as a signature, and returns a JSON object. For each request a signature is needed and is generated through the Date.now().toString() function. See example below:
 
+```
 async wrapperMockFunction(props){
     const signature = Date.now.toString();
     const crypt = this.encryptJSONObject(props);
@@ -87,6 +89,7 @@ async wrapperMockFunction(props){
         console.error(error);
     }
 }
+```
 
 # Misc
 ## Build tools
