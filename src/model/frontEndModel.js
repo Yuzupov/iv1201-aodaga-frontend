@@ -237,8 +237,8 @@ export default {
 			//const token = this.getCookie("loginCookie");
 
 			this.fields.role = decryptedResponse.role;
-		} catch {
-			throw new Error;
+		} catch (error) {
+			throw error;
 		}
 	},
 
@@ -335,8 +335,7 @@ export default {
 			const response = await this.sendAndSetNewPassword();
 			return response();
 		} catch (error) {
-			console.error("Failed resetting password");
-			throw error;
+			throw new Error("Failed resetting password, try again");
 		}
 	},
 
@@ -362,12 +361,17 @@ export default {
 				}
 			);
 			if (!response.ok) {
+				if(response.status === 400){
+					throw new Error("User already exists");
+				}
+				if(response.status === 500){
+					throw new Error("We are currently experiencing problems on our end, please try again later");
+				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			return response.json();
 		} catch (error) {
-			console.error(`Error when registering: ${error}`);
-			throw error;
+			throw new Error("We are currently experiencing problems on our end, please try again later");
 		}
 	},
 
@@ -382,12 +386,18 @@ export default {
 				}
 			);
 			if (!response.ok) {
+				console.log(response);
+				if(response.status === 400){
+					throw new Error("No user found");
+				}
+				if(response.status === 500){
+					throw new Error("We are currently experiencing problems on our end, please try again later");
+				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			return response.json();
 		} catch (error) {
-			console.log(`error: ${error}`);
-			throw error;
+			throw new Error("We are currently experiencing problems on our end, please try again later");
 		}
 	},
 
@@ -401,12 +411,14 @@ export default {
 				}
 			);
 			if (!response.ok) {
+				if(response.status === 500){
+					throw new Error("We are currently experiencing problems on our end, please try again later");
+				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			return response.json();
 		} catch (error) {
-			console.error(`Error when requesting applicants: ${error}`);	
-			throw error;
+			throw new Error(`Error when requesting applicants: ${error}`);	
 		}
 	},
 
@@ -420,11 +432,14 @@ export default {
 				}
 			);
 			if (!response.ok) {
+				if(response.status === 500){
+					throw new Error("We are currently experiencing problems on our end, please try again later");
+				}
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			return response.json();
 		} catch (error) {
-			console.error(`Error when requesting password link ${error}`);
+			throw new Error(`Error when requesting password link ${error}`);
 		}
 
 	},
