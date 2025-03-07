@@ -29,21 +29,16 @@ const ListApplicationsPresenter = {
       if (!password) {
         throw new Error("Password is requried");
       }
-      const recruiterAuth = frontEndModel.getCookie("loginCookie");
-      if (!recruiterAuth) {
+      const cookieValue = frontEndModel.getCookie("loginCookie");
+      if (!cookieValue) {
         throw new Error("Recruiter authentication cookie not found.");
       }
       const response = await frontEndModel.updateApplicant({
         password: password,
-        token: recruiterAuth,
+        token: cookieValue.authToken,
       });
-
-      if (response.success) {
-        console.log("Authentication successful!");
-        onSuccess();
-      } else {
-        throw new Error(response.message || "Authentication failed.");
-      }
+      console.log("Authentication successful!");
+      onSuccess();
     } catch (error) {
       console.error("Error authenticating status change:", error.message);
       onError(error.message);

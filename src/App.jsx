@@ -54,7 +54,7 @@ const App = () => {
 		<Route path="/reset/:token" element={ <ResetLinkView/> } />
 		<Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
 		<Route path="/dashboard" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
-		<Route path="/applicants" element={/*<ProtectedRouteList>*/<ListApplicationsView />/*</ProtectedRouteList>*/} />
+		<Route path="/applicants" element={<ProtectedRouteList>*/<ListApplicationsView /></ProtectedRouteList>} />
 		<Route/>
 		</Routes>
 		</Router>

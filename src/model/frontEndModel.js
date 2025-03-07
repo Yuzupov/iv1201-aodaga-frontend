@@ -174,12 +174,13 @@ export default {
 	 */
 
 	getCookie(cname) { 
-		console.log("Hej");
 		const cookies = document.cookie.split("; ");
 		for (let cookie of cookies) {
 			let [key, value] = cookie.split("=");
 			if (key === cname) {
-				return JSON.parse(decodeURIComponent(value));
+				const returnedCookieValue = JSON.parse(decodeURIComponent(value));
+				return returnedCookieValue;
+
 			}
 		}
 		return "";
@@ -341,16 +342,17 @@ export default {
 
 	async updateApplicant(props){
         const epoch = Date.now().toString();
-        
         this.setField(props);
-        const crypt = this.encryptJSONObject({password: props.password, token: props.token});
+        const crypt = this.encryptJSONObject({
+		password: props.password, 
+		token: props.token
+	});
         this.fields.JSONCipherObject = crypt.json;
         this.fields.JSONCipherObject.timestamp = epoch;
         // what?
         try {
             const response = await this.updateApplicantPost(epoch);
             const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
-            console.log(decryptedResponse);
             return decryptedResponse;
         } catch {
             throw new Error;
@@ -498,7 +500,7 @@ export default {
 		}
 	},
 
-	async updateApplicantPost(epoch){
+	async updateApplicantPost(){
         try{
             const response = await fetch(URI + '/applicant/update',
                 {
