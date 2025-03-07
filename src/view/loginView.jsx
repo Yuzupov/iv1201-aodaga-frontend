@@ -59,7 +59,7 @@ const LoginView = () => {
         setMessage(`Login successful! Welcome`);
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("username", "user");
-        setTimeout(() => navigate("/dashboard"), 1000);
+        navigate("/dashboard");
       },
       (error) => setMessage(`Error: ${error}`)
     );
