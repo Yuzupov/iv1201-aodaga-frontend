@@ -14,33 +14,39 @@ const ListApplicationsPresenter = {
    */
   fetchApplications: async (onSuccess, onError) => {
     try {
-	    console.log("in listapplicationspresenter");
+      console.log("in listapplicationspresenter");
       const applications = await frontEndModel.listApplicants();
-      onSuccess(applications); 
+      onSuccess(applications);
     } catch (error) {
       console.error("Error in ListApplicationsPresenter:", error.message);
-      onError(error.message); 
+      onError(error.message);
     }
   },
 
-  /**
-   * Updates the applicant's status in the database.
-   * @param {number} applicantId - The ID of the applicant.
-   * @param {string} newStatus - The new status ("Handled" or "Unhandled").
-   * @param {Function} onSuccess - Callback for successful update.
-   * @param {Function} onError - Callback for handling errors.
-   */
-  updateApplicantStatus: async (applicantId, newStatus, onSuccess, onError) => {
+  updateApplicantStatus: async (password, onSuccess, onError) => {
     try {
-      console.log(`Updating status for applicant ${applicantId} to ${newStatus}...`);
-      
-      await frontEndModel.updateApplicantStatus(applicantId, newStatus);
+      console.log(`Authenticating status change with password...`);
+      if (!password) {
+        throw new Error("Password is requried");
+      }
+      const recruiterAuth = frontEndModel.getCookie("loginCookie");
+      if (!recruiterAuth) {
+        throw new Error("Recruiter authentication cookie not found.");
+      }
+      const response = await frontEndModel.updateApplicant({
+        password: password,
+        token: recruiterAuth,
+      });
 
-      console.log("Status updated successfully!");
-      onSuccess(); 
+      if (response.success) {
+        console.log("Authentication successful!");
+        onSuccess();
+      } else {
+        throw new Error(response.message || "Authentication failed.");
+      }
     } catch (error) {
-      console.error("Error updating applicant status:", error.message);
-      onError(error.message); 
+      console.error("Error authenticating status change:", error.message);
+      onError(error.message);
     }
   },
 };

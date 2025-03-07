@@ -344,7 +344,7 @@ export default {
         const epoch = Date.now().toString();
         
         this.setField(props);
-        const crypt = this.encryptJSONObject({password: props, token: /**TODO get token and put in json */});
+        const crypt = this.encryptJSONObject({password: props.password, token: props.token});
         this.fields.JSONCipherObject = crypt.json;
         this.fields.JSONCipherObject.timestamp = epoch;
         // what?
@@ -352,7 +352,7 @@ export default {
             const response = await this.updateApplicantPost(epoch);
             const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
             console.log(decryptedResponse);
-            //TODO RETURN 
+            return decryptedResponse;
         } catch {
             throw new Error;
         }
@@ -502,6 +502,8 @@ export default {
             throw error;
         }
     },
+
+	
 	
 };
 
