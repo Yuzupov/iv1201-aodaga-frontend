@@ -174,12 +174,12 @@ export default {
 	 */
 
 	getCookie(cname) { 
-		console.log("Hej");
 		const cookies = document.cookie.split("; ");
 		for (let cookie of cookies) {
 			let [key, value] = cookie.split("=");
 			if (key === cname) {
-				return JSON.parse(decodeURIComponent(value));
+				const returnedCookieValue = JSON.parse(decodeURIComponent(value));
+				return returnedCookieValue;
 			}
 		}
 		return "";
@@ -339,6 +339,25 @@ export default {
 		}
 	},
 
+	async updateApplicant(props){
+        const epoch = Date.now().toString();
+        this.setField(props);
+        const crypt = this.encryptJSONObject({
+		password: props.password, 
+		token: props.token
+	});
+        this.fields.JSONCipherObject = crypt.json;
+        this.fields.JSONCipherObject.timestamp = epoch;
+        // what?
+        try {
+            const response = await this.updateApplicantPost(epoch);
+            const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+            return decryptedResponse;
+        } catch {
+            throw new Error;
+        }
+    },
+
 	/**
 	 * Following section contains methods that does the actual requests to the back-end APIs
 	 */
@@ -479,5 +498,28 @@ export default {
 			console.error(`Error when requesting password link ${error}`);
 		}
 	},
+
+	async updateApplicantPost(){
+        try{
+            const response = await fetch(URI + '/applicant/update',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.fields.JSONCipherObject),
+                }
+                
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error(`Error when updating applicant: ${error}`);    
+            throw error;
+        }
+    },
+
+	
+	
 };
 

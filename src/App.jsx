@@ -44,7 +44,6 @@ const Recruiter = ({children}) => { // maybe add this to the view for conditiona
 }
 
 const App = () => {
-
 	return (
 		<Router>
 		<Routes>

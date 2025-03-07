@@ -1,42 +1,32 @@
 import React, { useEffect, useState } from "react";
 import ListApplicationsPresenter from "../presenter/listApplicationsPresenter";
 import MenuLayout from "../layouts/menuLayout";
-/**
- * @constant
- * @name ListApplicationsView
- * A view to list the applications
- * @returns the view with the applications
- */
+
 const ListApplicationsView = () => {
   const [applications, setApplications] = useState([]);
   const [error, setError] = useState("");
-  /**
-   * @function
-   * @name useEffect
-   * A state handler from react
-   * @returns nothing
-   */
+  const [password, setPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
-    // Fetch applications on component mount
-    console.log("in view");
     ListApplicationsPresenter.fetchApplications(
       (data) => setApplications(data),
       (errorMessage) => setError(errorMessage)
     );
   }, []);
 
-  const handleStatusChange = (applicantId, newStatus) => {
+  const handleStatusChangeRequest = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmStatusChange = () => {
     ListApplicationsPresenter.updateApplicantStatus(
-      applicantId,
-      newStatus,
+      password,
       () => {
-        setApplications((prevApplications) =>
-          prevApplications.map((app) =>
-            app.id === applicantId ? { ...app, status: newStatus } : app
-          )
-        );
+        setIsModalOpen(false);
+        setPassword("");
       },
-      (errorMessage) => setError(errorMessage) 
+      (errorMessage) => setError(errorMessage)
     );
   };
 
@@ -52,11 +42,12 @@ const ListApplicationsView = () => {
                 <th className="border border-gray-300 px-4 py-2">Name</th>
                 <th className="border border-gray-300 px-4 py-2">Surname</th>
                 <th className="border border-gray-300 px-4 py-2">Status</th>
+                <th className="border border-gray-300 px-4 py-2">Action</th>
               </tr>
             </thead>
             <tbody>
-              {applications.map((app, index) => (
-                <tr key={index}>
+              {applications.map((app) => (
+                <tr key={app.id}>
                   <td className="border border-gray-300 px-4 py-2">
                     {app.name}
                   </td>
@@ -64,16 +55,15 @@ const ListApplicationsView = () => {
                     {app.surname}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    <select
-                      value={app.status}
-                      onChange={(e) =>
-                        handleStatusChange(app.id, e.target.value)
-                      }
-                      className="border border-gray-300 px-2 py-1"
+                    {app.status}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      onClick={handleStatusChangeRequest}
+                      className="px-4 py-2 bg-blue-500 text-white"
                     >
-                      <option value="Unhandled">Unhandled</option>
-                      <option value="Handled">Handled</option>
-                    </select>
+                      Change Status
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -83,6 +73,42 @@ const ListApplicationsView = () => {
           <p>No applications available.</p>
         )}
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
+              Enter Recruiter Password
+            </h2>
+            <p className="text-gray-600 mb-4">
+              Please enter your password to authorize the status change.
+            </p>
+
+            <input
+              type="password"
+              className="border border-gray-300 p-2 w-full rounded-md mb-4 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            <div className="flex justify-end space-x-2">
+              <button
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                onClick={handleConfirmStatusChange}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </MenuLayout>
   );
 };
