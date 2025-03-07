@@ -262,6 +262,8 @@ export default {
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			console.log(decryptedResponse);
 			var list = decryptedResponse.applicants;
+			let i = 0;
+			list.map((app) => app.id = i++);
 			return list;
 		} catch {
 			throw new Error;
