@@ -46,7 +46,7 @@ const CreateView = () => {
 
     CreatePresenter.submitForm(
       formData,
-      (data) => setMessage(`Account created successfully: ${data.username}`),
+      () => setMessage(`Account created successfully`),
       (error) => setMessage(`Error: ${error}`)
     );
   };

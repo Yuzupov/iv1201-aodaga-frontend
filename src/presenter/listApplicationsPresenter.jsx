@@ -27,7 +27,7 @@ const ListApplicationsPresenter = {
     try {
       console.log(`Authenticating status change with password...`);
       if (!password) {
-        throw new Error("Password is requried");
+        throw new Error("Password is required");
       }
       const cookieValue = frontEndModel.getCookie("loginCookie");
       if (!cookieValue) {

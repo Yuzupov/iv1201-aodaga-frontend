@@ -353,8 +353,8 @@ export default {
             const response = await this.updateApplicantPost(epoch);
             const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
             return decryptedResponse;
-        } catch {
-            throw new Error;
+        } catch (error){
+            throw error;
         }
     },
 
@@ -381,6 +381,7 @@ export default {
 			);
 			if (!response.ok) {
 				if(response.status === 400){
+					console.log("we get here?");
 					throw new Error("User already exists");
 				}
 				if(response.status === 500){
@@ -390,7 +391,7 @@ export default {
 			}
 			return response.json();
 		} catch (error) {
-			throw new Error("We are currently experiencing problems on our end, please try again later");
+			throw error;
 		}
 	},
 
@@ -416,7 +417,7 @@ export default {
 			}
 			return response.json();
 		} catch (error) {
-			throw new Error("We are currently experiencing problems on our end, please try again later");
+			throw error;
 		}
 	},
 
@@ -510,6 +511,9 @@ export default {
                 
             );
             if (!response.ok) {
+		if(response.status === 403){
+			throw new Error("Incorrect password");
+		}
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();

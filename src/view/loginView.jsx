@@ -56,7 +56,7 @@ const LoginView = () => {
     LoginPresenter.submitLogin(
       formData,
       () => {
-        setMessage(`Login successful! Welcome, user`);
+        setMessage(`Login successful! Welcome`);
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("username", "user");
         setTimeout(() => navigate("/dashboard"), 1000);
@@ -74,7 +74,18 @@ const LoginView = () => {
             Create an account
           </a>
         </p>
-        {message && <p className="text-green-500">{message}</p>}
+
+  {message && (
+          <p
+            className={`text-center mb-4 p-2 rounded ${message.startsWith("Error")
+              ? "bg-red-500 text-white"
+              : "bg-green-500 text-white"
+              }`}
+          >
+            {message}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
             { label: "Username or Email", name: "username", type: "text" },

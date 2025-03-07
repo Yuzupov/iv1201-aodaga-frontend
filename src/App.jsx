@@ -26,10 +26,7 @@ const ProtectedRoute = ({children}) => {
 }
 
 const ProtectedRouteList = ({children}) => {
-	console.log(children);
 	const userToken = getCookie("loginCookie");
-	console.log("In App.jsx");
-	console.log(userToken);
 	return userToken.userRole === "recruiter" ? children : <Navigate to="/dashboard" replace/>;
 
 }
@@ -48,8 +45,7 @@ const App = () => {
 		<Router>
 		<Routes>
 		<Route path="/" element={<ProtectedRoute><DashboardView /></ProtectedRoute> } />
-		<Route path="/start" element={<StartView />} />
-		<Route path="/create-account" element={ <CreateView /> } />
+		<Route path="/create-account" element={<IfTokenLogin> <CreateView /></IfTokenLogin> } />
 		<Route path="/reset/create-link" element={ <CreateResetLinkView/> } />
 		<Route path="/reset/:token" element={ <ResetLinkView/> } />
 		<Route path="/login" element={<IfTokenLogin><LoginView /></IfTokenLogin>} /> 
