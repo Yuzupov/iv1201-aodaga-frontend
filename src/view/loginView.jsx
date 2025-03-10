@@ -75,6 +75,13 @@ const LoginView = () => {
           </a>
         </p>
 
+        <p className="text-sm mb-8 text-center">
+          Forgot your password again?{" "}
+          <a href="/reset/create-link" className="text-purple-400 hover:underline">
+            Reset password
+          </a>
+        </p>
+
   {message && (
           <p
             className={`text-center mb-4 p-2 rounded ${message.startsWith("Error")
