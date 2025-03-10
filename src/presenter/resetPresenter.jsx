@@ -13,7 +13,7 @@ const ResetPresenter = {
 			onSuccess(); 
 		} catch (error) {
 			console.error("Error caught in ResetPresenter:", error.message);
-			throw error;
+			onError(error.message);
 		}
 	},
 	validateLink: async (formData, onSuccess, onError) => {
@@ -25,7 +25,6 @@ const ResetPresenter = {
 			onSuccess();
 		} catch (error) {
 			console.error("Error in ResetPresenter:", error.message);
-			throw error;
 		}
 	},
 };

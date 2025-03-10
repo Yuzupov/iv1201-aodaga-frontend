@@ -60,11 +60,10 @@ const ResetView = () => {
 		ResetPresenter.resetPasswordForm(
 			formData,
 			() => {
-				console.log("ligma");
 				setMessage(`Password reset successfully!`);
 				navigate("/login"); 
 			},
-			(error) => setMessage(`Reset password failed, please try again or contact an administrator`)
+			(error) => setMessage(`Error: ${error}`)
 		);
 	};
 
