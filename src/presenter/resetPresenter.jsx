@@ -2,7 +2,6 @@ import frontEndModel from "../model/frontEndModel";
 const ResetPresenter = {
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
-			console.log(formData);
 			if (formData.userPassword !== formData.confirmUserPassword) {
 				throw new Error("Passwords do not match");
 			}
@@ -10,7 +9,7 @@ const ResetPresenter = {
 				throw new Error("Password must be at least 2 character")
 			}
 			const resetConfirmation = await frontEndModel.setNewPassword(formData);
-
+			
 			onSuccess(); 
 		} catch (error) {
 			console.error("Error caught in ResetPresenter:", error.message);

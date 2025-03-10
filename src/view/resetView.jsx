@@ -57,10 +57,10 @@ const ResetView = () => {
 
   const handleSubmit = (e) => { // NEW NEW NEW 
 		e.preventDefault();
-
 		ResetPresenter.resetPasswordForm(
 			formData,
 			() => {
+				console.log("ligma");
 				setMessage(`Password reset successfully!`);
 				navigate("/login"); 
 			},

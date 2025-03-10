@@ -208,7 +208,6 @@ export default {
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
 			return {};
 		} catch (error) {
-			console.log(error);
 			throw error;
 		}
 	},
@@ -230,12 +229,7 @@ export default {
 		try {
 			const response = await this.loginUser(epoch);
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
-			console.log(decryptedResponse);
 			this.createCookie(decryptedResponse.token, decryptedResponse.role, decryptedResponse.expirationDate);
-			const testCookie = this.getCookie("loginCookie");
-			console.log(testCookie.userRole);
-			//const token = this.getCookie("loginCookie");
-
 			this.fields.role = decryptedResponse.role;
 		} catch (error) {
 			throw error;
@@ -257,10 +251,8 @@ export default {
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
 		try{
-			console.log("call in listapplicants");
 			const response = await this.fetchApplicantList();
 			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
-			console.log(decryptedResponse);
 			var list = decryptedResponse.applicants;
 			let i = 0;
 			list.map((app) => app.id = i++);
@@ -280,7 +272,6 @@ export default {
 
 	async resetPasswordLink(props){
 		const epoch = Date.now().toString();
-		console.log(props);
 		const crypt = this.encryptJSONObject(props);
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
@@ -324,7 +315,6 @@ export default {
 	 */
 
 	async setNewPassword(props){
-		console.log(props);
 		const epoch = Date.now().toString();
 		const crypt = this.encryptJSONObject({
 			link: props.token.token,
@@ -333,9 +323,9 @@ export default {
 		this.fields.JSONCipherObject = crypt.json;
 		this.fields.JSONCipherObject.timestamp = epoch;
 		try{
-			console.log("We are in the function that calls for teh request");
 			const response = await this.sendAndSetNewPassword();
-			return response();
+			const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
+			return decryptedResponse;
 		} catch (error) {
 			throw new Error("Failed resetting password, try again");
 		}
@@ -407,7 +397,6 @@ export default {
 				}
 			);
 			if (!response.ok) {
-				console.log(response);
 				if(response.status === 400){
 					throw new Error("No user found");
 				}
