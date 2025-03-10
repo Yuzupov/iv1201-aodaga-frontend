@@ -17,7 +17,7 @@ const CreateAccountPage = () => {
       alert(error.message);
     }
   };
-
+const stop = performance.now();
   return <CreateView onSubmit={handleFormSubmit} />;
 };
 

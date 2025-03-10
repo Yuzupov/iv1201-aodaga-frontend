@@ -372,7 +372,7 @@ export default {
 	 * @returns {object} Confirmation or Error object from backend. 
 	 */
 
-	async registerUser(epoch) {
+	async registerUser() {
 		try {
 			const response = await fetch(URI + '/register',
 				{
@@ -383,7 +383,6 @@ export default {
 			);
 			if (!response.ok) {
 				if(response.status === 400){
-					console.log("we get here?");
 					throw new Error("User already exists");
 				}
 				if(response.status === 500){
@@ -397,7 +396,7 @@ export default {
 		}
 	},
 
-	async loginUser(epoch){
+	async loginUser(){
 		try {
 			const response = await fetch(URI + '/login',
 				{
@@ -411,6 +410,9 @@ export default {
 				console.log(response);
 				if(response.status === 400){
 					throw new Error("No user found");
+				}
+				if(response.status === 403){
+					throw new Error("Incorrect credentials");
 				}
 				if(response.status === 500){
 					throw new Error("We are currently experiencing problems on our end, please try again later");
