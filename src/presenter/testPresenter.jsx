@@ -1,5 +1,10 @@
 import frontEndModel from "../model/frontEndModel"; 
 
+/**
+ *
+ * THIS WAS A TEST PRESENTER WHEN STARTING THE PROJECT, NOT CURRENTLY IN USE
+ *
+ */
 const CreatePresenter = {
   submitForm: async (formData, onSuccess, onError) => {
     try {

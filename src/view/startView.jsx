@@ -4,6 +4,11 @@ import MenuLayout from "../layouts/menuLayout";
 import Button from "../components/button";
 //import amuse from "../assets/amuse.jpg";
 
+/**
+ *
+ * THIS VIEW IS NOT CURRENTLY IN USE
+ *
+ */
 const StartView = () => {
   return (
     <MenuLayout title="Welcome to THE Amusement Park!" className="text-center">

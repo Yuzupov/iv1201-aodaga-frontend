@@ -10,6 +10,7 @@ const CreatePresenter = {
    * @function
    * @name submitForm
    * @param {object} formData 
+   * verifies and passes data down to model
    * @returns Either a confirmation or error message to the view.
    */
   submitForm: async (formData, onSuccess, onError) => {

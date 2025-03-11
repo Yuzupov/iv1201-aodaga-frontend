@@ -39,18 +39,7 @@ const LoginView = () => {
    * @returns nothing
    */
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   LoginPresenter.submitLogin(
-  //     formData,
-  //     () => setMessage(`Login successful! Welcome, user`),
-  //     (error) => setMessage(`Error: ${error}`)
-  //   );
-  // };
-
   const handleSubmit = (e) => {
-    // NEW NEW NEW
     e.preventDefault();
 
     LoginPresenter.submitLogin(

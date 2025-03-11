@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import ListApplicationsPresenter from "../presenter/listApplicationsPresenter";
 import MenuLayout from "../layouts/menuLayout";
 
+/**
+ * @constant
+ * @name ListApplicationsView
+ * a view that lists all the applicants to a recruiter
+ * @returns the view that displays applicants
+ */
+
 const ListApplicationsView = () => {
   const [applications, setApplications] = useState([]);
   const [error, setError] = useState("");
@@ -15,10 +22,22 @@ const ListApplicationsView = () => {
     );
   }, []);
 
+/**
+ * @function
+ * @name handleStatusChangeRequest
+ * opens a new window to enter password for a recruiter
+ * @returns nothing
+ */
   const handleStatusChangeRequest = () => {
     setIsModalOpen(true);
   };
 
+/**
+ * @function
+ * @name handleConfirmStatusChange
+ * passes entered password down to the presenter
+ * @returns nothing
+ */
   const handleConfirmStatusChange = () => {
     ListApplicationsPresenter.updateApplicantStatus(
       password,

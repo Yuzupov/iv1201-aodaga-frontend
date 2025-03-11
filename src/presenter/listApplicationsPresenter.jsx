@@ -27,9 +27,14 @@ const ListApplicationsPresenter = {
     }
   },
 
+/**
+ * @function
+ * @name updateApplicantStatus
+ * function for talking to dummy endpoint when changing an applicant status
+ * @returns either confirmation or error message.
+ */
   updateApplicantStatus: async (password, onSuccess, onError) => {
     try {
-	const start = performance.now();
       console.log(`Authenticating status change with password...`);
       if (!password) {
         throw new Error("Password is required");
@@ -44,9 +49,6 @@ const ListApplicationsPresenter = {
       });
       console.log("Authentication successful!");
       onSuccess();
-      const stop = performance.now();
-	    const res = stop-start;
-      console.log(res);
     } catch (error) {
       console.error("Error authenticating status change:", error.message);
       onError(error.message);

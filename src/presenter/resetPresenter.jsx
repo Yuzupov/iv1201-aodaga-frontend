@@ -1,5 +1,18 @@
 import frontEndModel from "../model/frontEndModel";
+/**
+ * @constant
+ * @name ResetPresenter
+ * a presenter for resetting password functionality
+ * @returns nothing 
+ */
 const ResetPresenter = {
+	/**
+	 * @function
+	 * @name resetPasswordForm
+	 * @param {object} formData
+	 * passes data from presenter to model
+	 * @returns either success or error message
+	 */
 	resetPasswordForm: async (formData, onSuccess, onError) => {
 		try{
 			if (formData.userPassword !== formData.confirmUserPassword) {
@@ -16,6 +29,13 @@ const ResetPresenter = {
 			onError(error.message);
 		}
 	},
+	/**
+	 * @function
+	 * @name validateLink
+	 * @param {object} formData
+	 * validates that the temporary password reset link is valid
+	 * @returns either success or error message
+	 */
 	validateLink: async (formData, onSuccess, onError) => {
 		try {
 			const validateLink = await frontEndModel.validateLink(formData.token);

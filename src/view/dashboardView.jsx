@@ -3,6 +3,12 @@ import MenuLayout from "../layouts/menuLayout";
 import DashboardPresenter from "../presenter/dashboardPresenter";
 import { Link } from "react-router-dom";
 
+/**
+ * @constant
+ * @name DashboardView
+ * Returns a dashboard with an optinal button depending on role
+ * @returns the view responsible for the dashboard
+ */
 const DashboardView = () => {
   const [isRecruiter, setIsRecruiter] = useState(false);
   const [error, setError] = useState("");

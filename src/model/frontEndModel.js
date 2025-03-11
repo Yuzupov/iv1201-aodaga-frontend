@@ -8,6 +8,9 @@ if (window.location.hostname === "localhost"){
 }
 
 export default {
+	/**
+	 * Some fields for the model to hold data
+	 */
 	fields: {
 		userCredentials: {
 			firstName: "",
@@ -59,8 +62,7 @@ export default {
 	 * @name createRandomString
 	 * @param {integer} length
 	 * Takes a length and generates a hex string of that length that is random.
-	 *
-	 *
+	 * @returns {string] 
 	 */
 
 	createRandomString(length) {
@@ -108,7 +110,6 @@ export default {
 	 * @param {JSON}
 	 * Takes a JSON, decrypts and checks if the signature is valid, returns the decrypted object if true
 	 * @returns {JSON}
-	 *
 	 */
 
 	decryptResponse(response, symmetricKey, epoch){
@@ -150,7 +151,7 @@ export default {
 	 * @function
 	 * @name createCookie
 	 * @param {string, string}
-	 * Takes a token value and a timestampt from the back-end and creates a cookie
+	 * Takes a token value and a timestampt from the back-end and creates a cookie with the data as a URI encoded JSON string
 	 * @returns none
 	 *
 	 *
@@ -167,7 +168,7 @@ export default {
 	 * @function
 	 * @name getCookie
 	 * @param {string}
-	 * Takes a cookie name as an argument and finds if the cookie is stored in the browser.
+	 * Takes a cookie name as an argument and checks if the cookie is stored in the browser.
 	 * @returns empty string if not found, otherwise the cookie value
 	 *
 	 *
@@ -239,7 +240,7 @@ export default {
 	/**
 	 * @function
 	 * @name listApplicants
-	 * Lists applicants from back-end
+	 * Lists applicants available from back-end
 	 * @returns list of JSON objects 
 	 */
 
@@ -289,7 +290,7 @@ export default {
 	 * @name validateLink
 	 * @params {props}
 	 * Checks if the link provided by the back-end is valid.
-	 * @returns {bool} 
+	 * @returns {JSON} 
 	 */
 
 	async validateLink(props){
@@ -311,7 +312,7 @@ export default {
 	 * @name setNewPassword
 	 * @params {props}
 	 * Sets the new password in the back-end
-	 * @returns nothing
+	 * @returns {JSON} 
 	 */
 
 	async setNewPassword(props){
@@ -331,6 +332,13 @@ export default {
 		}
 	},
 
+	/**
+	 * @function
+	 * @name updateApplicant
+	 * @params {props}
+	 * talks to the dummy endpoint
+	 * @returns {JSON}
+	 */
 	async updateApplicant(props){
         const epoch = Date.now().toString();
         this.setField(props);
@@ -340,7 +348,6 @@ export default {
 	});
         this.fields.JSONCipherObject = crypt.json;
         this.fields.JSONCipherObject.timestamp = epoch;
-        // what?
         try {
             const response = await this.updateApplicantPost(epoch);
             const decryptedResponse = this.decryptResponse(response, crypt.aeskey, epoch);
@@ -386,6 +393,12 @@ export default {
 		}
 	},
 
+	/**
+	 * @function
+	 * @name loginUser
+	 * sends a POST request to back-end to login a user
+	 * @retursn {object} confirmation or error 
+	 */
 	async loginUser(){
 		try {
 			const response = await fetch(URI + '/login',
@@ -414,6 +427,12 @@ export default {
 		}
 	},
 
+	/**
+	 * @function
+	 * @name fetchApplicantList
+	 * fetch function that returns a JSON object with all of the applicants found in backend
+	 * @returns {JSON}
+	 */
 	async fetchApplicantList() {
 		try {
 			const response = await fetch(URI + '/applicants',
@@ -434,6 +453,13 @@ export default {
 			throw new Error(`Error when requesting applicants: ${error}`);	
 		}
 	},
+
+	/**
+	 * @function
+	 * @name createPasswordResetLink
+	 * asks backend to create a temporary password reset link
+	 * @returns {JSON}
+	 */
 
 	async createPasswordResetLink(){
 		try {
@@ -457,6 +483,13 @@ export default {
 
 	},
 
+	/**
+	 * @function
+	 * @name validateResetLink
+	 * checks with back-end that the temporary link sent to it is valid
+	 * @returns {JSON}
+	 */
+
 	async validateResetLink(){
 		try {
 			const response = await fetch(URI + '/password-reset/validate-link',
@@ -475,6 +508,13 @@ export default {
 		}
 	},
 
+	/**
+	 * @function
+	 * @name sendAndSetNewPassword
+	 * sends and asks to set the new password in the database
+	 * @returns {JSON}
+	 */
+
 	async sendAndSetNewPassword(){
 		try {
 			const response = await fetch(URI + '/password-reset',
@@ -492,6 +532,12 @@ export default {
 			console.error(`Error when requesting password link ${error}`);
 		}
 	},
+
+	/**
+	 * @function
+	 * @name
+	 * sends a request to the dummy endpoint to update the status of an applicant
+	 */
 
 	async updateApplicantPost(){
         try{

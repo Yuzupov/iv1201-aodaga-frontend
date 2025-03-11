@@ -2,6 +2,13 @@
 import React, { Component } from 'react';
 import testFunction from '../presenter/testView.jsx';
 
+/**
+ *
+ * THIS WAS A TEST VIEW DURING START OF PROJECT
+ * IS NOT CURRENTLY USED
+ *
+ */
+
 export default class Form extends Component {
 	state={
 		firstName: '',
